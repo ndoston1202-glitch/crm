@@ -11,7 +11,7 @@ Texnologiya: Django 5.1 + PostgreSQL (lokalda SQLite), Bootstrap 5. Interfeys: o
 | **Voronka (Kanban)** | Holatlar: Yangi → Ishlanmoqda → Qayta qo'ng'iroq → Qiziqdi → Sotuv / Rad etildi, drag-and-drop |
 | **Operator ish joyi** | "Mening ishlarim": muddati o'tgan va bugungi qo'ng'iroqlar, yangi lidlar; qo'ng'iroq natijasi, izoh, keyingi qo'ng'iroq vaqti |
 | **Sotuv va xizmat** | Sotuv rasmiylashtirilganda avtomatik xizmat buyurtmasi yaratiladi, servis xodimiga biriktiriladi, holati kuzatiladi |
-| **IP-telefoniya (Asterisk)** | Bir bosishda qo'ng'iroq, kiruvchi qo'ng'iroqda mijoz kartasi oynasi, ovoz yozuvlari CRMga yuklanadi va lid kartasida eshitiladi, operator izohi yozuv ostida |
+| **IP-telefoniya (Asterisk)** | Bir bosishda qo'ng'iroq, kiruvchi qo'ng'iroqda mijoz kartasi oynasi, ovoz yozuvlari MP3 formatida CRMga yuklanadi va lid kartasida eshitiladi, operator izohi yozuv ostida |
 | **Hisobotlar** | Davr bo'yicha: lidlar, qo'ng'iroqlar, sotuvlar, konversiya, tushum; operatorlar reytingi; manbalar |
 
 ## Rollar
@@ -26,7 +26,7 @@ Foydalanuvchilar va xizmatlar (narxlar) `Sozlamalar` (Django admin) orqali qo'sh
 
 ```bash
 python -m venv .venv && source .venv/bin/activate
-pip install -r requirements.txt
+pip install -r requirements.txt   # + ffmpeg: apt install ffmpeg
 python manage.py migrate
 python manage.py seed_demo        # demo ma'lumotlar (ixtiyoriy)
 python manage.py runserver

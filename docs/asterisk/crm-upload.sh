@@ -9,9 +9,9 @@ KEY_VALUE="$1"
 FILE="$2"
 [ -s "$FILE" ] || exit 0
 
-# Joy tejash uchun mp3 ga o'tkazish (lame o'rnatilgan bo'lsa)
+# MP3 ga CRM o'zi aylantiradi (ffmpeg). Trafikni kamaytirish uchun bu yerda ham siqish mumkin (lame o'rnatilgan bo'lsa).
 if command -v lame >/dev/null 2>&1; then
-    lame --quiet -V 6 "$FILE" "${FILE%.wav}.mp3" && rm -f "$FILE" && FILE="${FILE%.wav}.mp3"
+    lame --quiet -m m -b 64 "$FILE" "${FILE%.wav}.mp3" && rm -f "$FILE" && FILE="${FILE%.wav}.mp3"
 fi
 
 for i in 1 2 3 4 5; do

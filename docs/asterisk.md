@@ -12,7 +12,8 @@
 - **Kiruvchi qo'ng'iroq**: CRM raqam bo'yicha lidni topadi (oxirgi 9 raqam solishtiriladi). Topilmasa — yangi lid yaratadi
   (manba "Kiruvchi qo'ng'iroq"). Operator brauzerida mijoz kartasi bilan oyna chiqadi.
 - **Bir bosishda qo'ng'iroq**: lid kartasidagi yashil tugma. Operator profilida *Ichki raqam (SIP)* to'ldirilgan bo'lishi shart.
-- **Ovoz yozuvi** suhbat tugagach CRMga yuklanadi (`MEDIA_ROOT/recordings/`) va lid kartasida eshitiladi / yuklab olinadi.
+- **Ovoz yozuvi** suhbat tugagach **avtomatik** CRMga yuklanadi (operator hech narsa qilmaydi), **MP3 (mono, 64 kbit/s, ~0,5 MB/daqiqa)** ga aylantiriladi,
+  `MEDIA_ROOT/recordings/YYYY/MM/` ga saqlanadi va lid kartasida eshitiladi / MP3 sifatida yuklab olinadi.
   Yozuvni faqat menejer, shu qo'ng'iroq operatori yoki lidni ko'ra oladigan operator ochadi.
 - Operator qo'ng'iroqdan keyin yozgan **natija va izoh** shu qo'ng'iroq yozuvi ostida ko'rinadi.
 - **Hisobotlar**da: kiruvchi/chiquvchi, javob berilgan, o'tkazib yuborilgan, suhbat vaqti — operatorlar bo'yicha.
@@ -33,6 +34,8 @@ Token yaratish: `python -c "import secrets; print(secrets.token_urlsafe(32))"`
 
 Har bir operatorga **Sozlamalar → Users** bo'limida *Ichki raqam (SIP)* yozing (masalan `101`).
 
+CRM serverida **ffmpeg** o'rnatilgan bo'lishi shart (`apt install ffmpeg`) — yozuvlar shu bilan MP3 ga o'tkaziladi.
+
 Nginx orqasida bo'lsa `client_max_body_size 50m;` qo'ying (yozuv fayllari uchun).
 
 ## 2. Asterisk sozlamalari
@@ -44,7 +47,9 @@ Fayllar `docs/asterisk/` papkasida:
    `Dial(...)` da operatorlar ichki raqamlarini va `trunk` nomini o'zingiznikiga moslang. Trunkdan kelgan qo'ng'iroqlarni
    `crm-inbound` kontekstiga yo'naltiring. `dialplan reload`.
 3. `crm-upload.sh` → `/usr/local/bin/`, `chmod +x`; `crm.env.example` → `/etc/asterisk/crm.env`.
-   Kerak: `curl`; ixtiyoriy: `lame` (mp3 ga siqish, ~10 barobar kam joy).
+   Zaxira uchun `crm-upload-pending.sh` ni ham `/usr/local/bin/` ga qo'ying va cron qo'shing:
+   `*/10 * * * * /usr/local/bin/crm-upload-pending.sh` — CRM vaqtincha ishlamay qolsa ham yozuvlar yo'qolmaydi.
+   Kerak: `curl`; ixtiyoriy: `lame` (faylni ATS serverida siqib yuboradi — trafik kamroq).
 
 ## 3. Tekshirish
 

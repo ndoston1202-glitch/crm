@@ -1,7 +1,10 @@
+import io
 import shutil
 import socketserver
 import tempfile
 import threading
+import wave
+from unittest import skipUnless
 
 from django.contrib.auth import get_user_model
 from django.core.files.uploadedfile import SimpleUploadedFile
@@ -137,6 +140,24 @@ class TelephonyTests(TestCase):
         # begona operator eshita olmaydi
         self.client.force_login(self.op2)
         self.assertEqual(self.client.get(reverse("telephony:recording", args=[call.pk])).status_code, 404)
+
+    @skipUnless(shutil.which("ffmpeg"), "ffmpeg kerak")
+    def test_wav_converted_to_mp3(self):
+        self.hook(event="ring", uniqueid="w1", phone="901112233")
+        buf = io.BytesIO()
+        with wave.open(buf, "wb") as w:
+            w.setnchannels(1)
+            w.setsampwidth(2)
+            w.setframerate(8000)
+            w.writeframes(b"\x00\x10" * 8000)
+        audio = SimpleUploadedFile("w1.wav", buf.getvalue(), content_type="audio/wav")
+        resp = self.client.post(reverse("telephony:upload_recording"), {"token": TOKEN, "uniqueid": "w1", "file": audio})
+        self.assertEqual(resp.status_code, 200, resp.content)
+        call = PhoneCall.objects.get()
+        self.assertTrue(call.recording.name.endswith("w1.mp3"))
+        with call.recording.open("rb") as fh:
+            head = fh.read(3)
+        self.assertTrue(head == b"ID3" or head[:2] in (b"\xff\xfb", b"\xff\xf3"), head)
 
     def test_upload_requires_token(self):
         audio = SimpleUploadedFile("x.wav", b"x")
