@@ -340,6 +340,8 @@ RU = {
     "Ism": "Имя",
     "Familiya": "Фамилия",
     "Lotin harflari, raqamlar va @ . + - _ belgilari": "Латинские буквы, цифры и символы @ . + - _",
+    "versiya": "версия",
+    "Telefon brauzerida CRM ga kirib, shu tugmani bosing. Keyingi yangilanishlarni ilovaning o'zi taklif qiladi.": "Откройте CRM в браузере телефона и нажмите эту кнопку. Следующие обновления приложение предложит само.",
     "ATS orqali qo'ng'iroqlar yo'q": "Звонков через АТС нет",
     "ATS xatosi: %(e)s": "Ошибка АТС: %(e)s",
     "ATS: javob / jami": "АТС: отвечено / всего",

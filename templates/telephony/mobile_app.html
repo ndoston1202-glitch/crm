@@ -14,6 +14,8 @@
     </ol>
     <p class="mb-2">{% trans "Shundan keyin har bir qo'ng'iroq yozuvi 15 daqiqa ichida CRM ga tushadi, raqam bo'yicha lidga biriktiriladi va lid kartasida eshitiladi." %}</p>
     <a class="btn btn-success" href="{{ apk_url }}"><i class="bi bi-android2"></i> {% trans "Ilovani yuklab olish (APK)" %}</a>
+    {% if release %}<span class="text-muted small ms-2">{% trans "versiya" %} {{ release.versionName }}</span>{% endif %}
+    <div class="form-text">{% trans "Telefon brauzerida CRM ga kirib, shu tugmani bosing. Keyingi yangilanishlarni ilovaning o'zi taklif qiladi." %}</div>
   </div></div></div>
   <div class="col-md-5">
     <div class="card mb-3"><div class="card-body">

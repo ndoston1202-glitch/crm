@@ -14,6 +14,8 @@ urlpatterns = [
     path("mobile/login/", mobile_api.login, name="mobile_login"),
     path("mobile/me/", mobile_api.me, name="mobile_me"),
     path("mobile/logout/", mobile_api.logout, name="mobile_logout"),
+    path("mobile/app/version/", mobile_api.app_version, name="mobile_app_version"),
+    path("mobile/app/download/", mobile_api.app_download, name="mobile_app_download"),
     path("mobile/upload/", mobile_api.upload, name="mobile_upload"),
     path("recording/<int:pk>/", views.recording, name="recording"),
 ]

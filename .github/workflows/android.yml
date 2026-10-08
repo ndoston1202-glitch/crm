@@ -38,6 +38,17 @@ jobs:
           name: CRM-yozuvlar-apk
           path: CRM-yozuvlar.apk
 
+      - name: APK ni repozitoriyga joylash (CRM serveri "Yangilash" orqali oladi)
+        if: github.event_name != 'pull_request' && github.ref == 'refs/heads/main'
+        run: |
+          cp CRM-yozuvlar.apk mobile/release/CRM-yozuvlar.apk
+          printf '{"versionCode": %s, "versionName": "1.0.%s"}\n' "$GITHUB_RUN_NUMBER" "$GITHUB_RUN_NUMBER" > mobile/release/version.json
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add mobile/release
+          git commit -m "Android ilova 1.0.$GITHUB_RUN_NUMBER"
+          for i in 1 2 3; do git pull --rebase -q origin main && git push -q origin HEAD:main && break; sleep 5; done
+
       - name: Release ga joylash (main)
         if: github.event_name != 'pull_request' && github.ref == 'refs/heads/main'
         uses: softprops/action-gh-release@v2
