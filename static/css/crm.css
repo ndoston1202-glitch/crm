@@ -1,0 +1,20 @@
+body { background: #f4f6f9; }
+.sidebar { width: 230px; flex-shrink: 0; min-height: 100vh; background: #1f2d3d; }
+.sidebar .nav-link { color: #c2c7d0; border-radius: .4rem; margin-bottom: 2px; }
+.sidebar .nav-link.active, .sidebar .nav-link:hover { background: #2f80ed; color: #fff; }
+.kanban { display: flex; gap: 12px; overflow-x: auto; padding-bottom: 12px; }
+.kanban-col { flex: 0 0 260px; background: #e9edf2; border-radius: .5rem; display: flex; flex-direction: column; max-height: calc(100vh - 170px); }
+.kanban-col .cards { padding: 8px; min-height: 80px; overflow-y: auto; flex: 1; }
+.kanban-card { cursor: grab; }
+.kanban-card.sortable-ghost { opacity: .4; }
+.stat-card .value { font-size: 1.6rem; font-weight: 600; }
+@media (max-width: 768px) {
+  .sidebar { width: 100%; min-height: auto; }
+  .layout { flex-direction: column; }
+}
+.bell-btn { width: 44px; height: 44px; }
+.bell-menu { width: 360px; max-height: 70vh; overflow-y: auto; }
+.bell-menu .dropdown-item { white-space: normal; border-bottom: 1px solid #f0f0f0; }
+.bell-ring { animation: ring .25s ease-in-out 4; }
+@keyframes ring { 0%,100% { transform: rotate(0); } 25% { transform: rotate(15deg); } 75% { transform: rotate(-15deg); } }
+@media (max-width: 480px) { .bell-menu { width: calc(100vw - 32px); } }

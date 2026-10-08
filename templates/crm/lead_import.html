@@ -1,0 +1,14 @@
+{% extends "base.html" %}{% load i18n %}
+{% block title %}{% trans "Lid import" %}{% endblock %}
+{% block content %}
+<h3 class="mb-3">{% trans "Lidlarni CSV fayldan import qilish" %}</h3>
+<div class="card" style="max-width:640px"><div class="card-body">
+<form method="post" enctype="multipart/form-data">{% csrf_token %}
+  <div class="row">{% include "crm/_form_fields.html" with col="col-12" %}</div>
+  <button class="btn btn-primary"><i class="bi bi-upload"></i> {% trans "Import qilish" %}</button>
+</form>
+<hr><div class="small text-muted">{% trans "Namuna:" %}<pre class="mb-0">full_name,phone,source,region,comment
+Aliyev Vali,+998901234567,instagram,Toshkent,
+Karimova Nodira,+998935554433,telegram,Samarqand,Kechqurun qo'ng'iroq qiling</pre></div>
+</div></div>
+{% endblock %}

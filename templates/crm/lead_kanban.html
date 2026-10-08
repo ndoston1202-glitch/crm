@@ -1,0 +1,56 @@
+{% extends "base.html" %}{% load static i18n crm_tags %}
+{% block title %}{% trans "Voronka" %}{% endblock %}
+{% block content %}
+<div class="d-flex justify-content-between align-items-center mb-3">
+  <h3 class="mb-0">{% trans "Sotuv voronkasi" %}</h3>
+  <div class="d-flex gap-2">
+    {% if user.is_manager %}
+    <form><select name="operator" class="form-select" onchange="this.form.submit()"><option value="">{% trans "Barcha operatorlar" %}</option>{% for op in operators %}<option value="{{ op.pk }}" {% if request.GET.operator == op.pk|stringformat:'s' %}selected{% endif %}>{{ op }}</option>{% endfor %}</select></form>
+    {% endif %}
+    <a href="{% url 'crm:lead_create' %}" class="btn btn-primary text-nowrap"><i class="bi bi-plus-lg"></i> {% trans "Yangi lid" %}</a>
+  </div>
+</div>
+<div class="kanban">
+  {% for col in columns %}
+  <div class="kanban-col">
+    <div class="p-2 border-bottom border-3 border-{{ col.status|status_color }} fw-semibold d-flex justify-content-between">
+      <span>{{ col.label }}</span><span class="badge bg-{{ col.status|status_color }}" data-count>{{ col.count }}</span>
+    </div>
+    <div class="cards" data-status="{{ col.status }}">
+      {% for lead in col.leads %}
+      <div class="card kanban-card mb-2 shadow-sm" data-url="{% url 'crm:lead_set_status' lead.pk %}">
+        <div class="card-body p-2">
+          <a href="{% url 'crm:lead_detail' lead.pk %}" class="fw-semibold text-decoration-none">{{ lead.full_name }}</a>
+          <div class="small text-muted"><i class="bi bi-telephone"></i> {{ lead.phone }}</div>
+          <div class="small d-flex justify-content-between"><span>{{ lead.operator|default:"—" }}</span>{% if lead.next_call_at %}<span class="text-warning-emphasis"><i class="bi bi-alarm"></i> {{ lead.next_call_at|date:"d.m H:i" }}</span>{% endif %}</div>
+        </div>
+      </div>
+      {% endfor %}
+    </div>
+  </div>
+  {% endfor %}
+</div>
+{% csrf_token %}
+{% endblock %}
+{% block scripts %}
+<script src="{% static 'vendor/sortable/Sortable.min.js' %}"></script>
+<script>
+const csrf = document.querySelector('[name=csrfmiddlewaretoken]').value;
+function recount() {
+  document.querySelectorAll('.kanban-col').forEach(c => c.querySelector('[data-count]').textContent = c.querySelectorAll('.kanban-card').length);
+}
+document.querySelectorAll('.cards').forEach(el => new Sortable(el, {
+  group: 'leads', animation: 150,
+  onAdd: async (evt) => {
+    const body = new URLSearchParams({status: evt.to.dataset.status});
+    const res = await fetch(evt.item.dataset.url, {method: 'POST', headers: {'X-CSRFToken': csrf}, body});
+    if (!res.ok) {
+      const data = await res.json().catch(() => ({}));
+      alert(data.error || '{% trans "Xatolik" %}');
+      evt.from.insertBefore(evt.item, evt.from.children[evt.oldIndex] || null);
+    }
+    recount();
+  }
+}));
+</script>
+{% endblock %}

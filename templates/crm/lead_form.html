@@ -1,0 +1,18 @@
+{% extends "base.html" %}{% load i18n %}
+{% block title %}{% if lead %}{{ lead.full_name }}{% else %}{% trans "Yangi lid" %}{% endif %}{% endblock %}
+{% block content %}
+<h3 class="mb-3">{% if lead %}{% trans "Lidni tahrirlash" %}{% else %}{% trans "Yangi lid" %}{% endif %}</h3>
+{% if duplicates %}
+<div class="alert alert-warning">{% trans "Bu raqam bilan lidlar mavjud:" %}
+  {% for d in duplicates %}<a href="{% url 'crm:lead_detail' d.pk %}">{{ d }}</a>{% if not forloop.last %}, {% endif %}{% endfor %}
+</div>
+{% endif %}
+<div class="card"><div class="card-body">
+<form method="post">{% csrf_token %}
+  {{ form.non_field_errors }}
+  <div class="row">{% include "crm/_form_fields.html" %}</div>
+  <button class="btn btn-primary"><i class="bi bi-check-lg"></i> {% trans "Saqlash" %}</button>
+  <a href="{% if lead %}{% url 'crm:lead_detail' lead.pk %}{% else %}{% url 'crm:lead_list' %}{% endif %}" class="btn btn-light">{% trans "Bekor qilish" %}</a>
+</form>
+</div></div>
+{% endblock %}

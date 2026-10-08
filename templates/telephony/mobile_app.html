@@ -1,0 +1,30 @@
+{% extends "base.html" %}{% load i18n static %}
+{% block title %}{% trans "Telefon ilovasi" %}{% endblock %}
+{% block content %}
+<h3 class="mb-3"><i class="bi bi-phone"></i> {% trans "Telefon ilovasi — qo'ng'iroq yozuvlarini avtomatik yuklash" %}</h3>
+<div class="row g-3" style="max-width:1000px">
+  <div class="col-md-7"><div class="card h-100"><div class="card-body">
+    <h5>{% trans "Android" %}</h5>
+    <ol class="mb-3">
+      <li>{% trans "Telefonda qo'ng'iroqlarni avtomatik yozishni yoqing: Telefon → Sozlamalar → Qo'ng'iroqlarni yozish." %}</li>
+      <li>{% trans "Ilovani yuklab oling va o'rnating («noma'lum manbalardan o'rnatish»ga ruxsat bering)." %}</li>
+      <li>{% trans "Ilovaga server manzili, CRM login va parolingizni kiriting." %}</li>
+      <li>{% trans "Ruxsatlarni bering: qo'ng'iroqlar jurnali va audio fayllar." %}</li>
+      <li>{% trans "Xiaomi, Huawei, Oppo va boshqalarda ilova uchun batareya cheklovini o'chiring." %}</li>
+    </ol>
+    <p class="mb-2">{% trans "Shundan keyin har bir qo'ng'iroq yozuvi 15 daqiqa ichida CRM ga tushadi, raqam bo'yicha lidga biriktiriladi va lid kartasida eshitiladi." %}</p>
+    <a class="btn btn-success" href="{{ apk_url }}"><i class="bi bi-android2"></i> {% trans "Ilovani yuklab olish (APK)" %}</a>
+  </div></div></div>
+  <div class="col-md-5">
+    <div class="card mb-3"><div class="card-body">
+      <h6>{% trans "Ilovaga kiritiladigan server manzili" %}</h6>
+      <code class="fs-5 user-select-all">{{ server_url }}</code>
+      <div class="form-text">{% trans "Telefon CRM server bilan bir tarmoqda (Wi-Fi) bo'lishi yoki server internetdan ochiq bo'lishi kerak." %}</div>
+    </div></div>
+    <div class="card"><div class="card-body">
+      <h6><i class="bi bi-apple"></i> iPhone</h6>
+      <p class="small mb-0">{% trans "iPhone qo'ng'iroq yozuvlarini boshqa ilovalarga bermaydi, shuning uchun avtomatik yuklash imkonsiz. Yozuvni lid kartasidagi «Yozuvni qo'lda yuklash» orqali yuklang." %}</p>
+    </div></div>
+  </div>
+</div>
+{% endblock %}

@@ -1,0 +1,114 @@
+{% extends "base.html" %}{% load i18n crm_tags %}
+{% block title %}{{ lead.full_name }}{% endblock %}
+{% block content %}
+<div class="d-flex justify-content-between align-items-center mb-3">
+  <h3 class="mb-0">{{ lead.full_name }} <span class="badge bg-{{ lead.status|status_color }} fs-6 align-middle">{{ lead.get_status_display }}</span></h3>
+  <a href="{% url 'crm:lead_edit' lead.pk %}" class="btn btn-outline-primary"><i class="bi bi-pencil"></i> {% trans "Tahrirlash" %}</a>
+</div>
+<div class="row g-3">
+  <div class="col-lg-4">
+    <div class="card mb-3"><div class="card-body">
+      <dl class="mb-0">
+        <dt>{% trans "Telefon" %}</dt>
+        <dd>
+          <div class="d-flex align-items-center gap-2"><span class="fs-5">{{ lead.phone }}</span>
+            <button type="button" class="btn btn-success btn-sm js-call" data-phone="{{ lead.phone }}"><i class="bi bi-telephone-outbound"></i> {% trans "Qo'ng'iroq" %}</button></div>
+          {% if lead.extra_phone %}<div class="d-flex align-items-center gap-2 mt-1"><span>{{ lead.extra_phone }}</span>
+            <button type="button" class="btn btn-outline-success btn-sm js-call" data-phone="{{ lead.extra_phone }}"><i class="bi bi-telephone-outbound"></i></button></div>{% endif %}
+          <div class="small mt-1" id="call-msg"></div>
+        </dd>
+        <dt>{% trans "Manba" %}</dt><dd>{{ lead.get_source_display }}</dd>
+        <dt>{% trans "Hudud" %}</dt><dd>{{ lead.region|default:"—" }}</dd>
+        <dt>{% trans "Operator" %}</dt><dd>{{ lead.operator|default:"—" }}</dd>
+        <dt>{% trans "Keyingi qo'ng'iroq" %}</dt><dd>{{ lead.next_call_at|date:"d.m.Y H:i"|default:"—" }}</dd>
+        <dt>{% trans "Yaratilgan" %}</dt><dd>{{ lead.created_at|date:"d.m.Y H:i" }}</dd>
+        {% if lead.comment %}<dt>{% trans "Izoh" %}</dt><dd>{{ lead.comment|linebreaksbr }}</dd>{% endif %}
+      </dl>
+    </div></div>
+  </div>
+  <div class="col-lg-8">
+    <div class="card mb-3"><div class="card-header fw-semibold"><i class="bi bi-headset"></i> {% trans "Qo'ng'iroq natijasi" %}</div><div class="card-body">
+      <form method="post" action="{% url 'crm:call_add' lead.pk %}">{% csrf_token %}
+        <div class="row">{% include "crm/_form_fields.html" with form=call_form %}</div>
+        <button class="btn btn-primary">{% trans "Saqlash" %}</button>
+      </form>
+    </div></div>
+
+    <div class="card mb-3"><div class="card-header fw-semibold"><i class="bi bi-cart-check"></i> {% trans "Sotuvni rasmiylashtirish" %}</div><div class="card-body">
+      <form method="post" action="{% url 'crm:sale_add' lead.pk %}">{% csrf_token %}
+        <div class="row">{% include "crm/_form_fields.html" with form=sale_form %}</div>
+        <button class="btn btn-success"><i class="bi bi-check2-circle"></i> {% trans "Sotuv qilindi" %}</button>
+      </form>
+    </div></div>
+
+    {% if sales %}
+    <div class="card mb-3"><div class="card-header fw-semibold">{% trans "Sotuvlar" %}</div>
+      <table class="table mb-0"><thead><tr><th>{% trans "Sana" %}</th><th>{% trans "Xizmat" %}</th><th>{% trans "Summa" %}</th><th>{% trans "Xizmat holati" %}</th></tr></thead><tbody>
+      {% for s in sales %}<tr><td>{{ s.created_at|date:"d.m.Y" }}</td><td>{{ s.service }}</td><td>{{ s.amount|floatformat:"0g" }}</td>
+        <td>{% if s.order %}<span class="badge bg-{{ s.order.status|status_color }}">{{ s.order.get_status_display }}</span> {{ s.order.assignee|default:"" }}{% endif %}</td></tr>{% endfor %}
+      </tbody></table>
+    </div>
+    {% endif %}
+
+    <div class="card mb-3"><div class="card-header fw-semibold"><i class="bi bi-soundwave"></i> {% trans "Qo'ng'iroqlar va ovoz yozuvlari" %}</div>
+      <ul class="list-group list-group-flush">
+      {% for pc in phone_calls %}
+        <li class="list-group-item">
+          <div class="d-flex flex-wrap justify-content-between gap-2">
+            <div>
+              {% if pc.direction == "in" %}<i class="bi bi-telephone-inbound text-primary"></i>{% else %}<i class="bi bi-telephone-outbound text-success"></i>{% endif %}
+              <strong>{{ pc.get_direction_display }}</strong> · {{ pc.phone }}
+              <span class="badge bg-{% if pc.status == 'answered' %}success{% elif pc.status == 'ringing' %}warning{% else %}danger{% endif %}">{{ pc.get_status_display }}</span>
+              {% if pc.duration %}<span class="text-muted"><i class="bi bi-stopwatch"></i> {{ pc.duration_display }}</span>{% endif %}
+              {% if pc.source != "asterisk" %}<span class="badge text-bg-light border"><i class="bi bi-phone"></i> {{ pc.get_source_display }}</span>{% endif %}
+            </div>
+            <small class="text-muted">{{ pc.started_at|date:"d.m.Y H:i" }} · {{ pc.operator|default:pc.extension|default:"—" }}</small>
+          </div>
+          {% if pc.recording %}
+            <audio controls preload="none" class="w-100 mt-2" src="{% url 'telephony:recording' pc.pk %}"></audio>
+            <a href="{% url 'telephony:recording' pc.pk %}" download class="small"><i class="bi bi-download"></i> {% trans "Yuklab olish" %}</a>
+          {% elif pc.status == "answered" %}<div class="small text-muted mt-1">{% trans "Ovoz yozuvi hali yuklanmagan" %}</div>{% endif %}
+          {% for n in pc.notes.all %}
+            <div class="mt-2 p-2 bg-light rounded small"><i class="bi bi-chat-left-text"></i> <b>{{ n.operator }}:</b> {{ n.get_result_display }}{% if n.note %} — {{ n.note|linebreaksbr }}{% endif %}</div>
+          {% endfor %}
+          {% if pc.transcript %}<details class="mt-2"><summary class="small">{% trans "Suhbat matni" %}</summary><div class="small">{{ pc.transcript|linebreaksbr }}</div></details>{% endif %}
+        </li>
+      {% empty %}<li class="list-group-item text-muted">{% trans "Qo'ng'iroq yozuvlari yo'q" %}</li>{% endfor %}
+      </ul>
+      <div class="card-footer">
+        <form method="post" enctype="multipart/form-data" action="{% url 'telephony:manual_upload' lead.pk %}" class="d-flex flex-wrap gap-2 align-items-center">{% csrf_token %}
+          <span class="small text-muted"><i class="bi bi-upload"></i> {% trans "Yozuvni qo'lda yuklash (iPhone va boshqalar):" %}</span>
+          <input type="file" name="file" accept="audio/*,.m4a,.amr,.3gp,.wav,.mp3,.ogg,.aac" class="form-control form-control-sm" style="max-width:260px" required>
+          <select name="direction" class="form-select form-select-sm" style="max-width:150px">
+            <option value="out">{% trans "Chiquvchi" %}</option><option value="in">{% trans "Kiruvchi" %}</option>
+          </select>
+          <button class="btn btn-sm btn-outline-primary">{% trans "Yuklash" %}</button>
+        </form>
+      </div>
+    </div>
+
+    <div class="card"><div class="card-header fw-semibold"><i class="bi bi-clock-history"></i> {% trans "Boshqa izohlar" %}</div>
+      <ul class="list-group list-group-flush">
+      {% for c in calls %}
+        <li class="list-group-item"><div class="d-flex justify-content-between"><strong>{{ c.get_result_display }}</strong><small class="text-muted">{{ c.created_at|date:"d.m.Y H:i" }} · {{ c.operator }}</small></div>{% if c.note %}<div>{{ c.note|linebreaksbr }}</div>{% endif %}</li>
+      {% empty %}<li class="list-group-item text-muted">{% trans "Bo'sh" %}</li>{% endfor %}
+      </ul>
+    </div>
+  </div>
+</div>
+{% endblock %}
+{% block scripts %}
+<script>
+document.querySelectorAll('.js-call').forEach(btn => btn.addEventListener('click', async () => {
+  const msg = document.getElementById('call-msg');
+  btn.disabled = true;
+  const res = await fetch("{% url 'telephony:click_to_call' lead.pk %}", {
+    method: 'POST', headers: {'X-CSRFToken': '{{ csrf_token }}'}, body: new URLSearchParams({phone: btn.dataset.phone})
+  });
+  const data = await res.json().catch(() => ({}));
+  msg.className = 'small mt-1 ' + (res.ok ? 'text-success' : 'text-danger');
+  msg.textContent = data.message || data.error || '{% trans "Xatolik" %}';
+  setTimeout(() => btn.disabled = false, 5000);
+}));
+</script>
+{% endblock %}
