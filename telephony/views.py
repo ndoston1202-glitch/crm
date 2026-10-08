@@ -17,6 +17,7 @@ from django.views.decorators.http import require_POST
 
 from crm.models import Lead
 from crm.views import visible_leads
+from notifications.services import managers, notify
 
 from . import ami
 from .audio import ConversionError, to_mp3
@@ -123,6 +124,7 @@ def webhook(request):
             )
     if call.lead and call.lead.operator_id is None and call.operator and call.operator.is_operator:
         call.lead.operator = call.operator
+        call.lead._actor_id = call.operator.pk
         call.lead.save(update_fields=["operator", "updated_at"])
 
     if event == "answer":
@@ -138,6 +140,16 @@ def webhook(request):
             call.duration = int((now - call.answered_at).total_seconds())
         call.ended_at = now
     call.save()
+    if event == "hangup" and call.direction == PhoneCall.Direction.INCOMING and call.status != PhoneCall.Status.ANSWERED:
+        recipients = [call.lead.operator] if call.lead and call.lead.operator else list(managers().distinct())
+        notify(
+            recipients,
+            "missed",
+            _("O'tkazib yuborilgan qo'ng'iroq: %(name)s") % {"name": call.lead.full_name if call.lead else call.phone},
+            text=call.phone,
+            url=reverse("crm:lead_detail", args=[call.lead_id]) if call.lead_id else "",
+            key=f"missed:{call.pk}",
+        )
     return JsonResponse({"ok": True, "call_id": call.pk, "lead_id": call.lead_id})
 
 

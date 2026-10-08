@@ -1,0 +1,21 @@
+{% extends "base.html" %}{% load i18n %}
+{% block title %}{% trans "Yangilash" %}{% endblock %}
+{% block content %}
+<h3 class="mb-3">{% trans "Yangilanish o'rnatildi" %}</h3>
+<div class="card mb-3" style="max-width:760px"><ul class="list-group list-group-flush">
+  {% for step in log %}<li class="list-group-item"><i class="bi bi-check-circle text-success"></i> {{ step.title }}</li>{% endfor %}
+</ul></div>
+{% if restarting %}
+  <div class="alert alert-info" id="restart-msg"><span class="spinner-border spinner-border-sm"></span> {% trans "Dastur qayta ishga tushirilmoqda, sahifa o'zi yangilanadi..." %}</div>
+{% else %}
+  <div class="alert alert-warning">{% trans "Serverni qo'lda qayta ishga tushiring (oynani yopib, CRM belgisini qayta bosing)." %}</div>
+{% endif %}
+{% endblock %}
+{% block scripts %}{% if restarting %}
+<script>
+setTimeout(function wait() {
+  fetch("{% url 'system:ping' %}", {cache: 'no-store'}).then(r => r.ok ? location.href = "{% url 'crm:dashboard' %}" : setTimeout(wait, 1500))
+    .catch(() => setTimeout(wait, 1500));
+}, 3000);
+</script>
+{% endif %}{% endblock %}

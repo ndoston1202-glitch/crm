@@ -1,9 +1,18 @@
 import os
+import sys
 from pathlib import Path
 
 from django.utils.translation import gettext_lazy as _
 
 BASE_DIR = Path(__file__).resolve().parent.parent
+
+# .env faylidan sozlamalarni o'qish (o'rnatuvchi yaratadi): KALIT=qiymat
+_env_file = BASE_DIR / ".env"
+if _env_file.exists():
+    for _line in _env_file.read_text(encoding="utf-8").splitlines():
+        _key, _sep, _value = _line.strip().partition("=")
+        if _sep and not _key.startswith("#"):
+            os.environ.setdefault(_key.strip(), _value.strip())
 
 SECRET_KEY = os.environ.get("SECRET_KEY", "dev-insecure-change-me")
 DEBUG = os.environ.get("DEBUG", "1") == "1"
@@ -19,6 +28,8 @@ INSTALLED_APPS = [
     "accounts",
     "crm",
     "telephony",
+    "notifications",
+    "system",
 ]
 
 MIDDLEWARE = [
@@ -115,3 +126,6 @@ ASTERISK = {
 MEDIA_ROOT = Path(os.environ.get("MEDIA_ROOT", BASE_DIR / "media"))
 DATA_UPLOAD_MAX_MEMORY_SIZE = 50 * 1024 * 1024
 FILE_UPLOAD_MAX_MEMORY_SIZE = 10 * 1024 * 1024
+
+# Testlarda fon rejimida git fetch qilinmasin
+UPDATE_CHECK_DISABLED = "test" in sys.argv

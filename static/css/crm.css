@@ -12,3 +12,9 @@ body { background: #f4f6f9; }
   .sidebar { width: 100%; min-height: auto; }
   .layout { flex-direction: column; }
 }
+.bell-btn { width: 44px; height: 44px; }
+.bell-menu { width: 360px; max-height: 70vh; overflow-y: auto; }
+.bell-menu .dropdown-item { white-space: normal; border-bottom: 1px solid #f0f0f0; }
+.bell-ring { animation: ring .25s ease-in-out 4; }
+@keyframes ring { 0%,100% { transform: rotate(0); } 25% { transform: rotate(15deg); } 75% { transform: rotate(-15deg); } }
+@media (max-width: 480px) { .bell-menu { width: calc(100vw - 32px); } }

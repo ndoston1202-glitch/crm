@@ -11,11 +11,13 @@ from django.db import transaction
 from django.db.models import Count, Q, Sum
 from django.http import JsonResponse
 from django.shortcuts import get_object_or_404, redirect, render
+from django.urls import reverse
 from django.utils import timezone
 from django.utils.dateparse import parse_date
 from django.utils.translation import gettext as _
 from django.views.decorators.http import require_POST
 
+from notifications.services import notify
 from telephony.stats import call_stats, fmt_seconds
 from telephony.utils import normalize_phone
 
@@ -135,6 +137,7 @@ def lead_create(request):
     if request.method == "POST" and form.is_valid():
         lead = form.save(commit=False)
         lead.created_by = request.user
+        lead._actor_id = request.user.pk
         if request.user.is_operator:
             lead.operator = request.user
         lead.save()
@@ -152,6 +155,7 @@ def lead_edit(request, pk):
     lead = get_object_or_404(visible_leads(request.user), pk=pk)
     form = LeadForm(request.POST or None, instance=lead, user=request.user)
     if request.method == "POST" and form.is_valid():
+        lead._actor_id = request.user.pk
         form.save()
         messages.success(request, _("Saqlandi"))
         return redirect("crm:lead_detail", pk=lead.pk)
@@ -211,6 +215,7 @@ def call_add(request, pk):
             new_status = Lead.Status.INTERESTED
         lead.status = new_status
         lead.next_call_at = form.cleaned_data["next_call_at"]
+        lead._actor_id = request.user.pk
         if lead.operator_id is None and request.user.is_operator:
             lead.operator = request.user
         lead.save()
@@ -231,12 +236,14 @@ def sale_add(request, pk):
             sale.lead = lead
             sale.operator = lead.operator or request.user
             sale.save()
-            ServiceOrder.objects.create(
+            order = ServiceOrder(
                 sale=sale,
                 assignee=form.cleaned_data["assignee"],
                 scheduled_at=form.cleaned_data["scheduled_at"],
                 address=form.cleaned_data["address"] or lead.region,
             )
+            order._actor_id = request.user.pk
+            order.save()
             lead.status = Lead.Status.WON
             lead.next_call_at = None
             lead.save()
@@ -280,6 +287,11 @@ def lead_import(request):
             )
         Lead.objects.bulk_create(leads)
         created = len(leads)
+        if operator and created and operator != request.user:
+            notify(
+                operator, "lead", _("Sizga %(n)s ta yangi lid biriktirildi") % {"n": created},
+                url=reverse("crm:my_work"),
+            )
         messages.success(request, _("Import qilindi: %(c)s ta, o'tkazib yuborildi: %(s)s ta") % {"c": created, "s": skipped})
         return redirect("crm:lead_list")
     return render(request, "crm/lead_import.html", {"form": form})
@@ -303,6 +315,7 @@ def order_edit(request, pk):
     form = ServiceOrderForm(request.POST or None, instance=order, user=request.user)
     if request.method == "POST" and form.is_valid():
         order = form.save(commit=False)
+        order._actor_id = request.user.pk
         if order.status == ServiceOrder.Status.DONE and order.completed_at is None:
             order.completed_at = timezone.now()
         elif order.status != ServiceOrder.Status.DONE:

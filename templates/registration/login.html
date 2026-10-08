@@ -1,9 +1,9 @@
-{% extends "base.html" %}{% load i18n %}
+{% extends "base.html" %}{% load i18n static %}
 {% block title %}{% trans "Kirish" %}{% endblock %}
 {% block public %}
 <div class="container" style="max-width:380px;margin-top:12vh">
   <div class="card shadow-sm"><div class="card-body p-4">
-    <h4 class="mb-3 text-center"><i class="bi bi-people-fill"></i> CRM</h4>
+    <div class="text-center mb-3"><img src="{% static 'img/logo.svg' %}" width="72" height="72" alt="CRM"><h4 class="mt-2">CRM</h4></div>
     {% if form.errors %}<div class="alert alert-danger">{% trans "Login yoki parol noto'g'ri" %}</div>{% endif %}
     <form method="post">{% csrf_token %}
       <div class="mb-3"><label class="form-label">{% trans "Login" %}</label><input name="username" class="form-control" autofocus required></div>

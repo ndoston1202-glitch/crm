@@ -8,12 +8,13 @@
   <link href="{% static 'vendor/bootstrap/bootstrap.min.css' %}" rel="stylesheet">
   <link href="{% static 'vendor/bootstrap-icons/bootstrap-icons.min.css' %}" rel="stylesheet">
   <link href="{% static 'css/crm.css' %}" rel="stylesheet">
+  <link rel="icon" href="{% static 'img/logo.svg' %}" type="image/svg+xml">
 </head>
 <body>
 {% if user.is_authenticated %}
 <div class="d-flex layout">
   <nav class="sidebar p-3 d-flex flex-column">
-    <a href="{% url 'crm:dashboard' %}" class="text-white text-decoration-none fs-4 fw-bold mb-3"><i class="bi bi-people-fill"></i> CRM</a>
+    <a href="{% url 'crm:dashboard' %}" class="text-white text-decoration-none fs-4 fw-bold mb-3 d-flex align-items-center"><img src="{% static 'img/logo.svg' %}" width="34" height="34" class="me-2" alt=""> CRM</a>
     <ul class="nav flex-column">
       {% if user.is_manager %}
       <li><a class="nav-link {% nav_active 'reports' %}" href="{% url 'crm:reports' %}"><i class="bi bi-bar-chart"></i> {% trans "Hisobotlar" %}</a></li>
@@ -31,6 +32,7 @@
       {% if user.is_manager %}
       <li><a class="nav-link {% nav_active 'lead_import' %}" href="{% url 'crm:lead_import' %}"><i class="bi bi-upload"></i> {% trans "Lid import" %}</a></li>
       <li><a class="nav-link" href="{% url 'admin:index' %}"><i class="bi bi-gear"></i> {% trans "Sozlamalar" %}</a></li>
+      <li><a class="nav-link {% nav_active 'update' %}" href="{% url 'system:update' %}"><i class="bi bi-cloud-arrow-down"></i> {% trans "Yangilash" %}</a></li>
       {% endif %}
     </ul>
     <div class="mt-auto pt-3 text-white-50 small">
@@ -47,7 +49,22 @@
       </form>
     </div>
   </nav>
-  <main class="flex-grow-1 p-4" style="min-width:0">
+  <main class="flex-grow-1 p-4 pt-3" style="min-width:0">
+    <div class="d-flex justify-content-end align-items-center mb-2 gap-3">
+      <div class="dropdown" id="bell">
+        <button class="btn btn-light position-relative rounded-circle bell-btn" data-bs-toggle="dropdown" data-bs-auto-close="outside" aria-label="{% trans 'Bildirishnomalar' %}">
+          <i class="bi bi-bell fs-5"></i>
+          <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger d-none" id="bell-count">0</span>
+        </button>
+        <div class="dropdown-menu dropdown-menu-end shadow p-0 bell-menu">
+          <div class="d-flex justify-content-between align-items-center px-3 py-2 border-bottom">
+            <strong>{% trans "Bildirishnomalar" %}</strong>
+            <button class="btn btn-link btn-sm p-0" id="bell-read-all">{% trans "Hammasini o'qildi" %}</button>
+          </div>
+          <div id="bell-list"><div class="text-muted small p-3">{% trans "Bildirishnomalar yo'q" %}</div></div>
+        </div>
+      </div>
+    </div>
     {% for message in messages %}
       <div class="alert alert-{% if message.tags == 'error' %}danger{% else %}{{ message.tags }}{% endif %} alert-dismissible fade show">{{ message }}<button type="button" class="btn-close" data-bs-dismiss="alert"></button></div>
     {% endfor %}
@@ -58,6 +75,51 @@
   {% block public %}{% endblock %}
 {% endif %}
 <script src="{% static 'vendor/bootstrap/bootstrap.bundle.min.js' %}"></script>
+{% if user.is_authenticated %}
+<script>
+(function () {
+  const list = document.getElementById('bell-list'), badge = document.getElementById('bell-count');
+  {% trans "Bildirishnomalar yo'q" as empty_text %}const emptyText = "{{ empty_text|escapejs }}";
+  let lastMax = 0;
+  try { lastMax = Number(sessionStorage.getItem('crmBellMax') || 0); } catch (e) {}
+  function esc(s) { const d = document.createElement('div'); d.textContent = s; return d.innerHTML; }
+  async function load() {
+    try {
+      const data = await (await fetch("{% url 'notifications:poll' %}", {cache: 'no-store'})).json();
+      badge.textContent = data.unread > 99 ? '99+' : data.unread;
+      badge.classList.toggle('d-none', !data.unread);
+      list.innerHTML = data.items.length ? data.items.map(n => `
+        <a href="${n.url}" class="dropdown-item d-flex gap-2 py-2 ${n.is_read ? '' : 'bg-primary-subtle'}">
+          <i class="bi ${n.icon} fs-5 text-primary"></i>
+          <div class="text-wrap"><div class="fw-semibold small">${esc(n.title)}</div>
+          ${n.text ? `<div class="small text-muted">${esc(n.text)}</div>` : ''}<div class="small text-muted">${n.time}</div></div></a>`).join('')
+        : `<div class="text-muted small p-3">${emptyText}</div>`;
+      const fresh = data.items.filter(n => !n.is_read && n.id > lastMax);
+      if (fresh.length && lastMax) {
+        badge.parentElement.classList.add('bell-ring');
+        setTimeout(() => badge.parentElement.classList.remove('bell-ring'), 1200);
+        if (window.Notification && Notification.permission === 'granted') {
+          fresh.slice(0, 3).forEach(n => new Notification(n.title, {body: n.text, icon: "{% static 'img/logo.png' %}"}).onclick = () => { window.focus(); location.href = n.url; });
+        }
+      }
+      if (data.items.length) {
+        lastMax = Math.max(lastMax, ...data.items.map(n => n.id));
+        try { sessionStorage.setItem('crmBellMax', lastMax); } catch (e) {}
+      }
+    } catch (e) {}
+  }
+  document.querySelector('.bell-btn').addEventListener('click', () => {
+    if (window.Notification && Notification.permission === 'default') Notification.requestPermission();
+  });
+  document.getElementById('bell-read-all').addEventListener('click', async () => {
+    await fetch("{% url 'notifications:read_all' %}", {method: 'POST', headers: {'X-CSRFToken': '{{ csrf_token }}'}});
+    load();
+  });
+  load();
+  setInterval(load, 20000);
+})();
+</script>
+{% endif %}
 {% if user.is_authenticated and user.sip_extension %}
 <div class="toast-container position-fixed bottom-0 end-0 p-3" id="call-toasts"></div>
 <script>

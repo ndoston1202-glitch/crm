@@ -53,6 +53,12 @@ msgstr "Отменено"
 msgid "Bekor qilish"
 msgstr "Отмена"
 
+msgid "Bildirishnomalar"
+msgstr "Уведомления"
+
+msgid "Bildirishnomalar yo'q"
+msgstr "Уведомлений нет"
+
 msgid "Biriktirilmagan"
 msgstr "Не назначен"
 
@@ -101,6 +107,12 @@ msgstr "Выход"
 msgid "Chiquvchi"
 msgstr "Исходящий"
 
+msgid "Dastur qayta ishga tushirilmoqda, sahifa o'zi yangilanadi..."
+msgstr "Программа перезапускается, страница обновится сама..."
+
+msgid "Dasturni yangilash"
+msgstr "Обновление программы"
+
 msgid "Davomiylik (s)"
 msgstr "Длительность (с)"
 
@@ -119,8 +131,14 @@ msgstr "В форме есть ошибки"
 msgid "Gaplashildi"
 msgstr "Состоялся разговор"
 
+msgid "Git topilmadi yoki dastur git orqali o'rnatilmagan"
+msgstr "Git не найден или программа установлена не через git"
+
 msgid "Hali qo'ng'iroq qilinmagan"
 msgstr "Звонков ещё не было"
+
+msgid "Hammasini o'qildi"
+msgstr "Прочитать все"
 
 msgid "Hisobotlar"
 msgstr "Отчёты"
@@ -176,6 +194,12 @@ msgstr "Без ответа"
 msgid "Jiringlamoqda"
 msgstr "Звонит"
 
+msgid "Joriy branch uchun server (upstream) sozlanmagan"
+msgstr "Для текущей ветки не настроен сервер (upstream)"
+
+msgid "Joriy versiya"
+msgstr "Текущая версия"
+
 msgid "Kartani ochish"
 msgstr "Открыть карточку"
 
@@ -199,6 +223,9 @@ msgstr "Показать"
 
 msgid "Konversiya"
 msgstr "Конверсия"
+
+msgid "Kutubxonalarni yangilash"
+msgstr "Обновление библиотек"
 
 msgid "Lid"
 msgstr "Лид"
@@ -232,6 +259,9 @@ msgstr "Логин"
 
 msgid "Login yoki parol noto'g'ri"
 msgstr "Неверный логин или пароль"
+
+msgid "Ma'lumotlar bazasini yangilash"
+msgstr "Обновление базы данных"
 
 msgid "Manba"
 msgstr "Источник"
@@ -293,6 +323,12 @@ msgstr "Пропущено"
 msgid "O'tkazib yuborilgan kiruvchi"
 msgstr "Пропущенные входящие"
 
+msgid "O'tkazib yuborilgan qo'ng'iroq"
+msgstr "Пропущенный звонок"
+
+msgid "O'tkazib yuborilgan qo'ng'iroq: %(name)s"
+msgstr "Пропущенный звонок: %(name)s"
+
 msgid "O'zbekcha"
 msgstr "Узбекский"
 
@@ -344,6 +380,12 @@ msgstr "Результат звонка"
 msgid "Qo'ng'iroq natijasi saqlandi"
 msgstr "Результат звонка сохранён"
 
+msgid "Qo'ng'iroq vaqti"
+msgstr "Время звонка"
+
+msgid "Qo'ng'iroq vaqti keldi: %(name)s"
+msgstr "Пора позвонить: %(name)s"
+
 msgid "Qo'ng'iroqlar"
 msgstr "Звонки"
 
@@ -379,6 +421,28 @@ msgstr "Сохранить"
 
 msgid "Sayt"
 msgstr "Сайт"
+
+msgid ""
+"Server Ishga_tushirish.bat orqali ishga tushirilmagan — yangilangach "
+"serverni qo'lda qayta ishga tushiring."
+msgstr ""
+"Сервер запущен не через Ishga_tushirish.bat — после обновления перезапустите"
+" его вручную."
+
+msgid ""
+"Serverni qo'lda qayta ishga tushiring (oynani yopib, CRM belgisini qayta "
+"bosing)."
+msgstr ""
+"Перезапустите сервер вручную (закройте окно и снова нажмите значок CRM)."
+
+msgid "Sizda eng so'nggi versiya"
+msgstr "У вас последняя версия"
+
+msgid "Sizga %(n)s ta yangi lid biriktirildi"
+msgstr "Вам назначено новых лидов: %(n)s"
+
+msgid "Sizga yangi lid biriktirildi: %(name)s"
+msgstr "Вам назначен новый лид: %(name)s"
 
 msgid "Sotuv"
 msgstr "Продажа"
@@ -421,6 +485,9 @@ msgstr "Сумма"
 
 msgid "Tahrirlash"
 msgstr "Редактировать"
+
+msgid "Tarjimalarni yangilash"
+msgstr "Обновление переводов"
 
 msgid "Tavsiya"
 msgstr "Рекомендация"
@@ -488,6 +555,46 @@ msgstr "Новый лид"
 
 msgid "Yangi lidlar"
 msgstr "Новые лиды"
+
+msgid "Yangi o'zgarishlar"
+msgstr "Новые изменения"
+
+msgid "Yangi versiya mavjud (%(n)s ta o'zgarish)"
+msgstr "Доступна новая версия (изменений: %(n)s)"
+
+msgid "Yangi versiyani yuklab olish"
+msgstr "Загрузка новой версии"
+
+msgid "Yangi xizmat buyurtmasi #%(n)s"
+msgstr "Новый заказ на обслуживание #%(n)s"
+
+msgid "Yangilanish"
+msgstr "Обновление"
+
+msgid "Yangilanish o'rnatildi"
+msgstr "Обновление установлено"
+
+msgid "Yangilanishni tekshirish"
+msgstr "Проверить обновления"
+
+msgid "Yangilanmoqda..."
+msgstr "Обновление..."
+
+msgid "Yangilash"
+msgstr "Обновить"
+
+msgid "Yangilash allaqachon bajarilmoqda"
+msgstr "Обновление уже выполняется"
+
+msgid ""
+"Yangilash uchun Git kerak va dastur git orqali o'rnatilgan bo'lishi kerak "
+"(Ornatish.bat buni sozlaydi)."
+msgstr ""
+"Для обновления нужен Git, и программа должна быть установлена через git "
+"(Ornatish.bat настраивает это)."
+
+msgid "Yangilashni o'rnatish"
+msgstr "Установить обновление"
 
 msgid "Yaratilgan"
 msgstr "Создан"

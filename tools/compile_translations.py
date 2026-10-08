@@ -1,7 +1,7 @@
 """Rus tarjimalarini locale/ru/LC_MESSAGES/django.po va .mo fayllariga yozadi.
 
 Tizimda GNU gettext bo'lmasa ham ishlaydi (polib kutubxonasi orqali).
-Ishga tushirish: python scripts/compile_translations.py
+Ishga tushirish: python tools/compile_translations.py
 """
 from pathlib import Path
 
@@ -138,6 +138,41 @@ RU = {
     "Yangi lid": "Новый лид",
     "Yangi lidlar": "Новые лиды",
     "Yaratilgan": "Создан",
+    "Bildirishnomalar": "Уведомления",
+    "Bildirishnomalar yo'q": "Уведомлений нет",
+    "Dastur qayta ishga tushirilmoqda, sahifa o'zi yangilanadi...": "Программа перезапускается, страница обновится сама...",
+    "Dasturni yangilash": "Обновление программы",
+    "Git topilmadi yoki dastur git orqali o'rnatilmagan": "Git не найден или программа установлена не через git",
+    "Hammasini o'qildi": "Прочитать все",
+    "Joriy branch uchun server (upstream) sozlanmagan": "Для текущей ветки не настроен сервер (upstream)",
+    "Joriy versiya": "Текущая версия",
+    "Kutubxonalarni yangilash": "Обновление библиотек",
+    "Ma'lumotlar bazasini yangilash": "Обновление базы данных",
+    "O'tkazib yuborilgan qo'ng'iroq": "Пропущенный звонок",
+    "O'tkazib yuborilgan qo'ng'iroq: %(name)s": "Пропущенный звонок: %(name)s",
+    "Qo'ng'iroq vaqti": "Время звонка",
+    "Qo'ng'iroq vaqti keldi: %(name)s": "Пора позвонить: %(name)s",
+    "Server Ishga_tushirish.bat orqali ishga tushirilmagan — yangilangach serverni qo'lda qayta ishga tushiring.":
+        "Сервер запущен не через Ishga_tushirish.bat — после обновления перезапустите его вручную.",
+    "Serverni qo'lda qayta ishga tushiring (oynani yopib, CRM belgisini qayta bosing).":
+        "Перезапустите сервер вручную (закройте окно и снова нажмите значок CRM).",
+    "Sizda eng so'nggi versiya": "У вас последняя версия",
+    "Sizga %(n)s ta yangi lid biriktirildi": "Вам назначено новых лидов: %(n)s",
+    "Sizga yangi lid biriktirildi: %(name)s": "Вам назначен новый лид: %(name)s",
+    "Tarjimalarni yangilash": "Обновление переводов",
+    "Yangi o'zgarishlar": "Новые изменения",
+    "Yangi versiya mavjud (%(n)s ta o'zgarish)": "Доступна новая версия (изменений: %(n)s)",
+    "Yangi versiyani yuklab olish": "Загрузка новой версии",
+    "Yangi xizmat buyurtmasi #%(n)s": "Новый заказ на обслуживание #%(n)s",
+    "Yangilanish": "Обновление",
+    "Yangilanish o'rnatildi": "Обновление установлено",
+    "Yangilanishni tekshirish": "Проверить обновления",
+    "Yangilanmoqda...": "Обновление...",
+    "Yangilash": "Обновить",
+    "Yangilash allaqachon bajarilmoqda": "Обновление уже выполняется",
+    "Yangilash uchun Git kerak va dastur git orqali o'rnatilgan bo'lishi kerak (Ornatish.bat buni sozlaydi).":
+        "Для обновления нужен Git, и программа должна быть установлена через git (Ornatish.bat настраивает это).",
+    "Yangilashni o'rnatish": "Установить обновление",
     "ATS orqali qo'ng'iroqlar yo'q": "Звонков через АТС нет",
     "ATS xatosi: %(e)s": "Ошибка АТС: %(e)s",
     "ATS: javob / jami": "АТС: отвечено / всего",
