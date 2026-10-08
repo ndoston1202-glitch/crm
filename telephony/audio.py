@@ -3,11 +3,18 @@ import shutil
 import subprocess
 import tempfile
 
+from django.conf import settings
 from django.core.files import File
 
 
 class ConversionError(Exception):
     pass
+
+
+def find_ffmpeg():
+    """Tizimdagi ffmpeg yoki o'rnatuvchi CRM papkasiga yuklab olgan tools/ffmpeg/bin/ffmpeg.exe."""
+    local = os.path.join(settings.BASE_DIR, "tools", "ffmpeg", "bin", "ffmpeg.exe" if os.name == "nt" else "ffmpeg")
+    return shutil.which("ffmpeg") or (local if os.path.isfile(local) else None)
 
 
 def to_mp3(upload):
@@ -18,7 +25,7 @@ def to_mp3(upload):
     base = os.path.splitext(os.path.basename(upload.name))[0] or "recording"
     if upload.name.lower().endswith(".mp3"):
         return f"{base}.mp3", upload, None
-    ffmpeg = shutil.which("ffmpeg")
+    ffmpeg = find_ffmpeg()
     if not ffmpeg:
         raise ConversionError("ffmpeg o'rnatilmagan")
     tmpdir = tempfile.mkdtemp(prefix="crm-rec-")

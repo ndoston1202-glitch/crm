@@ -580,6 +580,9 @@ msgstr "Ваш телефон звонит — поднимите трубку"
 msgid "Telegram"
 msgstr "Telegram"
 
+msgid "Til"
+msgstr "Язык"
+
 msgid "Tushum"
 msgstr "Выручка"
 
