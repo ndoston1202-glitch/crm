@@ -31,9 +31,9 @@ class ShareActivity : Activity() {
             }
         }
         Toast.makeText(this, "Ilovaga saqlandi: ${saved.size} ta yozuv", Toast.LENGTH_SHORT).show()
-        // Bitta yozuv bo'lsa — asosiy ekranda darhol qo'ng'iroqni tanlash oynasi ochiladi
+        // O'z oynamizda ochamiz (Google Telefon ichida emas). Bitta yozuv bo'lsa — asosiy ekranda darhol qo'ng'iroqni tanlash oynasi ochiladi
         startActivity(Intent(this, MainActivity::class.java)
-            .addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_SINGLE_TOP)
+            .addFlags(Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_SINGLE_TOP)
             .putExtra(MainActivity.EXTRA_ASSIGN, if (saved.size == 1) saved[0] else null))
         finish()
     }

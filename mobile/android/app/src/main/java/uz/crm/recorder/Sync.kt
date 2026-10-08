@@ -24,7 +24,11 @@ object Sync {
             .setPeriodic(15 * 60 * 1000L)
             .setPersisted(true)
             .build()
-        scheduler.schedule(job)
+        try {
+            scheduler.schedule(job)
+        } catch (e: Exception) {
+            Prefs(context).addLog("Avtomatik yuborish yoqilmadi: ${e.message}")
+        }
     }
 
     fun cancel(context: Context) {
@@ -52,7 +56,9 @@ object Sync {
                 continue
             }
             try {
-                Api.upload(prefs.server, prefs.token, context.contentResolver, item.toRecording(), context.cacheDir)
+                // client_id raqamga bog'liq: yozuv boshqa raqamga qayta biriktirilsa, server uni yangi deb qabul qiladi
+                val rec = item.toRecording().copy(clientId = (item.key + "_" + item.phone.filter { it.isDigit() }).takeLast(120))
+                Api.upload(prefs.server, prefs.token, context.contentResolver, rec, context.cacheDir)
                 prefs.markDone(item.key)
                 prefs.setError(item.key, null)
                 prefs.uploadedCount = prefs.uploadedCount + 1

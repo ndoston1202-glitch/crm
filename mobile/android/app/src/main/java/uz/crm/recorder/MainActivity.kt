@@ -32,6 +32,10 @@ import java.util.Locale
 class MainActivity : Activity() {
     companion object {
         const val EXTRA_ASSIGN = "assign_key"
+
+        /** Ilova ekranda ko'rinib turibdimi (yangilashni tasdiqlash oynasini ochish uchun). */
+        @Volatile
+        var resumed = false
     }
 
     private lateinit var prefs: Prefs
@@ -49,16 +53,27 @@ class MainActivity : Activity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         prefs = Prefs(this)
-        pendingAssign = intent.getStringExtra(EXTRA_ASSIGN)
+        // Ekran qayta yaratilganda (burish, Recents) bir xil yozuv uchun tanlash oynasi qayta chiqmasin
+        val fromHistory = (intent.flags and Intent.FLAG_ACTIVITY_LAUNCHED_FROM_HISTORY) != 0
+        pendingAssign = if (savedInstanceState == null && !fromHistory) intent.getStringExtra(EXTRA_ASSIGN) else null
     }
 
     override fun onNewIntent(intent: Intent) {
         super.onNewIntent(intent)
+        setIntent(intent)
         pendingAssign = intent.getStringExtra(EXTRA_ASSIGN)
     }
 
+    /** Fon oqimidan qaytganda ekran hali tirikmi (yopilgan ekranga oyna chiqarish ilovani yopib yuboradi). */
+    private fun alive() = !isFinishing && !isDestroyed
+
     override fun onResume() {
         super.onResume()
+        resumed = true
+        InstallReceiver.pendingConfirm?.let {
+            InstallReceiver.pendingConfirm = null
+            try { startActivity(it) } catch (e: Exception) { toast("Yangilashni tasdiqlab bo'lmadi: ${e.message}") }
+        }
         if (prefs.loggedIn) {
             reload()
             checkUpdate()
@@ -68,6 +83,7 @@ class MainActivity : Activity() {
     }
 
     override fun onPause() {
+        resumed = false
         super.onPause()
         stopPlayer()
     }
@@ -83,7 +99,28 @@ class MainActivity : Activity() {
 
     override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<out String>, grantResults: IntArray) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults)
+        // Ikki marta rad etilsa Android so'rovni boshqa ko'rsatmaydi — sozlamalar sahifasini ochamiz
+        val blocked = permissions.indices.any {
+            it < grantResults.size && grantResults[it] != PackageManager.PERMISSION_GRANTED &&
+                !shouldShowRequestPermissionRationale(permissions[it])
+        }
+        if (blocked) openPermissionSettings()
         if (prefs.loggedIn) reload()
+    }
+
+    private fun askFor(perms: Array<String>) {
+        if (perms.isEmpty()) return
+        prefs.askedCallLog = true
+        requestPermissions(perms, 1)
+    }
+
+    private fun openPermissionSettings() {
+        toast("Sozlamalar → Ruxsatlar: «Qo'ng'iroqlar jurnali» va «Musiqa va audio» ga ruxsat bering")
+        try {
+            startActivity(Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS, Uri.parse("package:$packageName")))
+        } catch (e: Exception) {
+            startActivity(Intent(Settings.ACTION_SETTINGS))
+        }
     }
 
     // ---------- UI yordamchilari ----------
@@ -173,16 +210,17 @@ class MainActivity : Activity() {
                     prefs.userName = res.optString("name")
                     if (prefs.sinceMs == 0L) prefs.sinceMs = System.currentTimeMillis() - 7 * 24 * 60 * 60 * 1000L
                     runOnUiThread {
+                        if (!alive()) return@runOnUiThread
                         Sync.schedule(this)
                         val missing = missingPermissions()
-                        if (missing.isNotEmpty()) requestPermissions(missing.toTypedArray(), 1)
-                        reload()
+                        // Ruxsat javobi kelgach onRequestPermissionsResult o'zi reload() qiladi
+                        if (missing.isNotEmpty()) askFor(missing.toTypedArray()) else reload()
                         checkUpdate()
                     }
                 } catch (e: ApiException) {
-                    runOnUiThread { toast(e.message ?: "Xato") }
+                    runOnUiThread { if (alive()) toast(e.message ?: "Xato") }
                 } catch (e: Exception) {
-                    runOnUiThread { toast("Serverga ulanib bo'lmadi: manzil va Wi-Fi ni tekshiring") }
+                    runOnUiThread { if (alive()) toast("Serverga ulanib bo'lmadi: manzil va Wi-Fi ni tekshiring") }
                 }
             }.start()
         })
@@ -198,12 +236,20 @@ class MainActivity : Activity() {
                 } ?: item
             }
             runOnUiThread {
+                if (!alive()) return@runOnUiThread
                 items = list
                 selected.retainAll(list.map { it.key }.toSet())
                 showMain()
-                pendingAssign?.let { key ->
+                // «Ulashish»dan kelgan yozuv: qo'ng'iroqlar jurnaliga ruxsat berilgach tanlash oynasini ochamiz
+                val canReadCalls = checkSelfPermission(Manifest.permission.READ_CALL_LOG) == PackageManager.PERMISSION_GRANTED
+                val key = pendingAssign
+                // Ruxsat bir marta so'ralgan bo'lsa ham kutib turmaymiz: tanlash oynasida raqamni qo'lda kiritish mumkin
+                if (key != null && (canReadCalls || prefs.askedCallLog)) {
                     pendingAssign = null
-                    items.firstOrNull { it.key == key }?.let { assignCall(it, offerSend = true) }
+                    intent.removeExtra(EXTRA_ASSIGN)
+                    items.firstOrNull { it.key == key && it.phone.isBlank() }?.let { assignCall(it, offerSend = true) }
+                } else if (key != null) {
+                    askFor(missingPermissions().toTypedArray())
                 }
             }
         }.start()
@@ -213,6 +259,7 @@ class MainActivity : Activity() {
         Thread {
             val r = Updater.check(this)
             runOnUiThread {
+                if (!alive()) return@runOnUiThread
                 if (r != null && release?.versionCode != r.versionCode) {
                     release = r
                     showMain()
@@ -239,7 +286,10 @@ class MainActivity : Activity() {
         if (missing.isNotEmpty()) {
             root.addView(card(
                 text("Ruxsat berilmagan: qo'ng'iroqlar jurnali yoki audio fayllar", 14f, color = Color.parseColor("#DC3545")),
-                button("Ruxsat berish") { requestPermissions(missing.toTypedArray(), 1) },
+                button("Ruxsat berish") {
+                    if (prefs.askedCallLog && missing.none { shouldShowRequestPermissionRationale(it) }) openPermissionSettings()
+                    else askFor(missing.toTypedArray())
+                },
             ))
         }
 
@@ -362,6 +412,9 @@ class MainActivity : Activity() {
     // ---------- Amallar ----------
     private fun assignCall(item: Item, offerSend: Boolean) {
         Calls.pick(this, "Yozuv qaysi qo'ng'iroqqa tegishli?") { call ->
+            if (!alive()) return@pick
+            // Raqam o'zgarsa — yozuv yangi raqam bilan qayta yuborilishi kerak
+            if (call.number != item.phone) prefs.unmarkDone(item.key)
             if (item.shared) {
                 Store(this).update(item.copy(phone = call.number, direction = call.direction, startedMs = call.start, durationSec = call.durationSec))
             } else {
@@ -387,7 +440,7 @@ class MainActivity : Activity() {
                     item.copy(phone = it.number, direction = it.direction, startedMs = it.start, durationSec = it.durationSec)
                 } ?: item
             }
-            runOnUiThread { items = fresh; sendSelected() }
+            runOnUiThread { if (alive()) { items = fresh; sendSelected() } }
         }.start()
     }
 
@@ -399,6 +452,10 @@ class MainActivity : Activity() {
             val result = Sync.send(this, toSend)
             runOnUiThread {
                 selected.removeAll(toSend.filter { prefs.isDone(it.key) }.map { it.key }.toSet())
+                if (!alive()) {
+                    Toast.makeText(applicationContext, result, Toast.LENGTH_LONG).show()
+                    return@runOnUiThread
+                }
                 AlertDialog.Builder(this).setMessage(result).setPositiveButton("OK", null).show()
                 if (prefs.loggedIn) reload() else showLogin()
             }
@@ -437,6 +494,7 @@ class MainActivity : Activity() {
                 Updater.install(this)
             } catch (e: Exception) {
                 runOnUiThread {
+                    if (!alive()) return@runOnUiThread
                     AlertDialog.Builder(this).setTitle("Yangilab bo'lmadi").setMessage(e.message ?: e.javaClass.simpleName)
                         .setPositiveButton("OK", null).show()
                 }

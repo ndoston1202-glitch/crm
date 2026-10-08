@@ -37,6 +37,16 @@ class Prefs(context: Context) {
         get() = sp.getBoolean("auto_upload", false)
         set(v) = sp.edit().putBoolean("auto_upload", v).apply()
 
+    /** Ruxsat kamida bir marta so'ralganmi (butunlay rad etilganini aniqlash uchun). */
+    var askedCallLog: Boolean
+        get() = sp.getBoolean("asked_call_log", false)
+        set(v) = sp.edit().putBoolean("asked_call_log", v).apply()
+
+    fun unmarkDone(id: String) {
+        val set = HashSet(sp.getStringSet("done", emptySet())!!)
+        if (set.remove(id)) sp.edit().putStringSet("done", set).apply()
+    }
+
     fun error(id: String): String? = sp.getString("err_$id", null)
 
     fun setError(id: String, message: String?) {
