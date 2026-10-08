@@ -1,0 +1,19 @@
+{% extends "base.html" %}{% load i18n %}
+{% block title %}{% trans "Mening ishlarim" %}{% endblock %}
+{% block content %}
+<div class="d-flex justify-content-between align-items-center mb-3">
+  <h3 class="mb-0">{% trans "Mening ishlarim" %}</h3>
+  <a href="{% url 'crm:lead_create' %}" class="btn btn-primary"><i class="bi bi-plus-lg"></i> {% trans "Yangi lid" %}</a>
+</div>
+<div class="row g-3 mb-4">
+  <div class="col-md-3"><div class="card stat-card"><div class="card-body"><div class="text-muted">{% trans "Bugungi qo'ng'iroqlar" %}</div><div class="value">{{ calls_today }}</div></div></div></div>
+  <div class="col-md-3"><div class="card stat-card"><div class="card-body"><div class="text-muted">{% trans "Bugungi sotuvlar" %}</div><div class="value text-success">{{ sales_today }}</div></div></div></div>
+  <div class="col-md-3"><div class="card stat-card"><div class="card-body"><div class="text-muted">{% trans "Muddati o'tgan" %}</div><div class="value text-danger">{{ overdue|length }}</div></div></div></div>
+  <div class="col-md-3"><div class="card stat-card"><div class="card-body"><div class="text-muted">{% trans "Yangi lidlar" %}</div><div class="value text-primary">{{ new_leads|length }}</div></div></div></div>
+</div>
+<div class="row g-3">
+  <div class="col-lg-6"><div class="card"><div class="card-header bg-danger text-white">{% trans "Muddati o'tgan qo'ng'iroqlar" %}</div>{% include "crm/_lead_rows.html" with leads=overdue %}</div></div>
+  <div class="col-lg-6"><div class="card"><div class="card-header bg-warning">{% trans "Bugun qo'ng'iroq qilish kerak" %}</div>{% include "crm/_lead_rows.html" with leads=today %}</div></div>
+  <div class="col-12"><div class="card"><div class="card-header bg-primary text-white">{% trans "Yangi lidlar" %}</div>{% include "crm/_lead_rows.html" with leads=new_leads %}</div></div>
+</div>
+{% endblock %}

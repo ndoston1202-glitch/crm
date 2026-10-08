@@ -1,0 +1,63 @@
+{% load static i18n crm_tags %}<!doctype html>
+{% get_current_language as LANG %}
+<html lang="{{ LANG }}">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>{% block title %}CRM{% endblock %} — CRM</title>
+  <link href="{% static 'vendor/bootstrap/bootstrap.min.css' %}" rel="stylesheet">
+  <link href="{% static 'vendor/bootstrap-icons/bootstrap-icons.min.css' %}" rel="stylesheet">
+  <link href="{% static 'css/crm.css' %}" rel="stylesheet">
+</head>
+<body>
+{% if user.is_authenticated %}
+<div class="d-flex layout">
+  <nav class="sidebar p-3 d-flex flex-column">
+    <a href="{% url 'crm:dashboard' %}" class="text-white text-decoration-none fs-4 fw-bold mb-3"><i class="bi bi-people-fill"></i> CRM</a>
+    <ul class="nav flex-column">
+      {% if user.is_manager %}
+      <li><a class="nav-link {% nav_active 'reports' %}" href="{% url 'crm:reports' %}"><i class="bi bi-bar-chart"></i> {% trans "Hisobotlar" %}</a></li>
+      {% endif %}
+      {% if user.is_operator %}
+      <li><a class="nav-link {% nav_active 'my_work' %}" href="{% url 'crm:my_work' %}"><i class="bi bi-headset"></i> {% trans "Mening ishlarim" %}</a></li>
+      {% endif %}
+      {% if not user.is_service %}
+      <li><a class="nav-link {% nav_active 'lead_list' 'lead_detail' 'lead_edit' 'lead_create' %}" href="{% url 'crm:lead_list' %}"><i class="bi bi-person-lines-fill"></i> {% trans "Lidlar" %}</a></li>
+      <li><a class="nav-link {% nav_active 'lead_kanban' %}" href="{% url 'crm:lead_kanban' %}"><i class="bi bi-kanban"></i> {% trans "Voronka" %}</a></li>
+      {% endif %}
+      {% if user.is_manager or user.is_service %}
+      <li><a class="nav-link {% nav_active 'order_list' 'order_edit' %}" href="{% url 'crm:order_list' %}"><i class="bi bi-tools"></i> {% trans "Xizmat buyurtmalari" %}</a></li>
+      {% endif %}
+      {% if user.is_manager %}
+      <li><a class="nav-link {% nav_active 'lead_import' %}" href="{% url 'crm:lead_import' %}"><i class="bi bi-upload"></i> {% trans "Lid import" %}</a></li>
+      <li><a class="nav-link" href="{% url 'admin:index' %}"><i class="bi bi-gear"></i> {% trans "Sozlamalar" %}</a></li>
+      {% endif %}
+    </ul>
+    <div class="mt-auto pt-3 text-white-50 small">
+      <form action="{% url 'set_language' %}" method="post" class="mb-2">{% csrf_token %}
+        <input type="hidden" name="next" value="{{ request.get_full_path }}">
+        <select name="language" class="form-select form-select-sm" onchange="this.form.submit()">
+          {% get_available_languages as LANGUAGES %}
+          {% for code, name in LANGUAGES %}<option value="{{ code }}" {% if code == LANG %}selected{% endif %}>{{ name }}</option>{% endfor %}
+        </select>
+      </form>
+      <div><i class="bi bi-person-circle"></i> {{ user }} <span class="badge bg-secondary">{{ user.get_role_display }}</span></div>
+      <form action="{% url 'logout' %}" method="post" class="mt-2">{% csrf_token %}
+        <button class="btn btn-sm btn-outline-light w-100"><i class="bi bi-box-arrow-right"></i> {% trans "Chiqish" %}</button>
+      </form>
+    </div>
+  </nav>
+  <main class="flex-grow-1 p-4" style="min-width:0">
+    {% for message in messages %}
+      <div class="alert alert-{% if message.tags == 'error' %}danger{% else %}{{ message.tags }}{% endif %} alert-dismissible fade show">{{ message }}<button type="button" class="btn-close" data-bs-dismiss="alert"></button></div>
+    {% endfor %}
+    {% block content %}{% endblock %}
+  </main>
+</div>
+{% else %}
+  {% block public %}{% endblock %}
+{% endif %}
+<script src="{% static 'vendor/bootstrap/bootstrap.bundle.min.js' %}"></script>
+{% block scripts %}{% endblock %}
+</body>
+</html>

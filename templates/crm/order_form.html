@@ -1,0 +1,25 @@
+{% extends "base.html" %}{% load i18n %}
+{% block title %}{% trans "Buyurtma" %} #{{ order.pk }}{% endblock %}
+{% block content %}
+<h3 class="mb-3">{% trans "Buyurtma" %} #{{ order.pk }}</h3>
+<div class="row g-3">
+  <div class="col-lg-4"><div class="card"><div class="card-body">
+    <dl class="mb-0">
+      <dt>{% trans "Mijoz" %}</dt><dd>{{ order.sale.lead.full_name }}</dd>
+      <dt>{% trans "Telefon" %}</dt><dd><a href="tel:{{ order.sale.lead.phone }}">{{ order.sale.lead.phone }}</a></dd>
+      <dt>{% trans "Xizmat" %}</dt><dd>{{ order.sale.service }}</dd>
+      <dt>{% trans "Summa" %}</dt><dd>{{ order.sale.amount|floatformat:"0g" }}</dd>
+      <dt>{% trans "Operator" %}</dt><dd>{{ order.sale.operator|default:"—" }}</dd>
+      {% if order.sale.note %}<dt>{% trans "Sotuv izohi" %}</dt><dd>{{ order.sale.note }}</dd>{% endif %}
+      {% if order.completed_at %}<dt>{% trans "Bajarilgan vaqt" %}</dt><dd>{{ order.completed_at|date:"d.m.Y H:i" }}</dd>{% endif %}
+    </dl>
+  </div></div></div>
+  <div class="col-lg-8"><div class="card"><div class="card-body">
+    <form method="post">{% csrf_token %}
+      <div class="row">{% include "crm/_form_fields.html" %}</div>
+      <button class="btn btn-primary">{% trans "Saqlash" %}</button>
+      <a href="{% url 'crm:order_list' %}" class="btn btn-light">{% trans "Orqaga" %}</a>
+    </form>
+  </div></div></div>
+</div>
+{% endblock %}

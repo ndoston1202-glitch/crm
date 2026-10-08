@@ -1,0 +1,55 @@
+{% extends "base.html" %}{% load i18n crm_tags %}
+{% block title %}{{ lead.full_name }}{% endblock %}
+{% block content %}
+<div class="d-flex justify-content-between align-items-center mb-3">
+  <h3 class="mb-0">{{ lead.full_name }} <span class="badge bg-{{ lead.status|status_color }} fs-6 align-middle">{{ lead.get_status_display }}</span></h3>
+  <a href="{% url 'crm:lead_edit' lead.pk %}" class="btn btn-outline-primary"><i class="bi bi-pencil"></i> {% trans "Tahrirlash" %}</a>
+</div>
+<div class="row g-3">
+  <div class="col-lg-4">
+    <div class="card mb-3"><div class="card-body">
+      <dl class="mb-0">
+        <dt>{% trans "Telefon" %}</dt><dd><a href="tel:{{ lead.phone }}" class="fs-5"><i class="bi bi-telephone"></i> {{ lead.phone }}</a>{% if lead.extra_phone %}<br><a href="tel:{{ lead.extra_phone }}">{{ lead.extra_phone }}</a>{% endif %}</dd>
+        <dt>{% trans "Manba" %}</dt><dd>{{ lead.get_source_display }}</dd>
+        <dt>{% trans "Hudud" %}</dt><dd>{{ lead.region|default:"—" }}</dd>
+        <dt>{% trans "Operator" %}</dt><dd>{{ lead.operator|default:"—" }}</dd>
+        <dt>{% trans "Keyingi qo'ng'iroq" %}</dt><dd>{{ lead.next_call_at|date:"d.m.Y H:i"|default:"—" }}</dd>
+        <dt>{% trans "Yaratilgan" %}</dt><dd>{{ lead.created_at|date:"d.m.Y H:i" }}</dd>
+        {% if lead.comment %}<dt>{% trans "Izoh" %}</dt><dd>{{ lead.comment|linebreaksbr }}</dd>{% endif %}
+      </dl>
+    </div></div>
+  </div>
+  <div class="col-lg-8">
+    <div class="card mb-3"><div class="card-header fw-semibold"><i class="bi bi-headset"></i> {% trans "Qo'ng'iroq natijasi" %}</div><div class="card-body">
+      <form method="post" action="{% url 'crm:call_add' lead.pk %}">{% csrf_token %}
+        <div class="row">{% include "crm/_form_fields.html" with form=call_form %}</div>
+        <button class="btn btn-primary">{% trans "Saqlash" %}</button>
+      </form>
+    </div></div>
+
+    <div class="card mb-3"><div class="card-header fw-semibold"><i class="bi bi-cart-check"></i> {% trans "Sotuvni rasmiylashtirish" %}</div><div class="card-body">
+      <form method="post" action="{% url 'crm:sale_add' lead.pk %}">{% csrf_token %}
+        <div class="row">{% include "crm/_form_fields.html" with form=sale_form %}</div>
+        <button class="btn btn-success"><i class="bi bi-check2-circle"></i> {% trans "Sotuv qilindi" %}</button>
+      </form>
+    </div></div>
+
+    {% if sales %}
+    <div class="card mb-3"><div class="card-header fw-semibold">{% trans "Sotuvlar" %}</div>
+      <table class="table mb-0"><thead><tr><th>{% trans "Sana" %}</th><th>{% trans "Xizmat" %}</th><th>{% trans "Summa" %}</th><th>{% trans "Xizmat holati" %}</th></tr></thead><tbody>
+      {% for s in sales %}<tr><td>{{ s.created_at|date:"d.m.Y" }}</td><td>{{ s.service }}</td><td>{{ s.amount|floatformat:"0g" }}</td>
+        <td>{% if s.order %}<span class="badge bg-{{ s.order.status|status_color }}">{{ s.order.get_status_display }}</span> {{ s.order.assignee|default:"" }}{% endif %}</td></tr>{% endfor %}
+      </tbody></table>
+    </div>
+    {% endif %}
+
+    <div class="card"><div class="card-header fw-semibold"><i class="bi bi-clock-history"></i> {% trans "Qo'ng'iroqlar tarixi" %}</div>
+      <ul class="list-group list-group-flush">
+      {% for c in calls %}
+        <li class="list-group-item"><div class="d-flex justify-content-between"><strong>{{ c.get_result_display }}</strong><small class="text-muted">{{ c.created_at|date:"d.m.Y H:i" }} · {{ c.operator }}</small></div>{% if c.note %}<div>{{ c.note|linebreaksbr }}</div>{% endif %}</li>
+      {% empty %}<li class="list-group-item text-muted">{% trans "Hali qo'ng'iroq qilinmagan" %}</li>{% endfor %}
+      </ul>
+    </div>
+  </div>
+</div>
+{% endblock %}

@@ -1,0 +1,397 @@
+#
+msgid ""
+msgstr ""
+"Language: ru\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Plural-Forms: nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2);\n"
+
+msgid "Administrator"
+msgstr "Администратор"
+
+msgid "Avval lid kartasida sotuvni rasmiylashtiring"
+msgstr "Сначала оформите продажу в карточке лида"
+
+msgid "Bajarildi"
+msgstr "Выполнено"
+
+msgid "Bajarilgan vaqt"
+msgstr "Время выполнения"
+
+msgid "Bajarilmoqda"
+msgstr "Выполняется"
+
+msgid "Band"
+msgstr "Занято"
+
+msgid "Barcha holatlar"
+msgstr "Все статусы"
+
+msgid "Barcha manbalar"
+msgstr "Все источники"
+
+msgid "Barcha operatorlar"
+msgstr "Все операторы"
+
+msgid "Barchasi"
+msgstr "Все"
+
+msgid "Bekor qilindi"
+msgstr "Отменено"
+
+msgid "Bekor qilish"
+msgstr "Отмена"
+
+msgid "Biriktirilmagan"
+msgstr "Не назначен"
+
+msgid "Biriktirilmagan lidlar"
+msgstr "Неназначенные лиды"
+
+msgid "Bo'sh"
+msgstr "Пусто"
+
+msgid "Boshqa"
+msgstr "Другое"
+
+msgid "Bu raqam bilan lidlar mavjud:"
+msgstr "Лиды с этим номером уже есть:"
+
+msgid "Bugun qo'ng'iroq qilish kerak"
+msgstr "Позвонить сегодня"
+
+msgid "Bugungi qo'ng'iroqlar"
+msgstr "Звонки сегодня"
+
+msgid "Bugungi sotuvlar"
+msgstr "Продажи сегодня"
+
+msgid "Buyurtma"
+msgstr "Заказ"
+
+msgid "Buyurtma yangilandi"
+msgstr "Заказ обновлён"
+
+msgid "Buyurtmalar yo'q"
+msgstr "Заказов нет"
+
+msgid "CSV fayl"
+msgstr "CSV файл"
+
+msgid "Chiqish"
+msgstr "Выход"
+
+msgid "F.I.Sh."
+msgstr "Ф.И.О."
+
+msgid "Facebook"
+msgstr "Facebook"
+
+msgid "Faol"
+msgstr "Активна"
+
+msgid "Formada xatolik bor"
+msgstr "В форме есть ошибки"
+
+msgid "Gaplashildi"
+msgstr "Состоялся разговор"
+
+msgid "Hali qo'ng'iroq qilinmagan"
+msgstr "Звонков ещё не было"
+
+msgid "Hisobotlar"
+msgstr "Отчёты"
+
+msgid "Holat"
+msgstr "Статус"
+
+msgid "Hudud"
+msgstr "Регион"
+
+msgid "Import"
+msgstr "Импорт"
+
+msgid "Import qilindi: %(c)s ta, o'tkazib yuborildi: %(s)s ta"
+msgstr "Импортировано: %(c)s, пропущено: %(s)s"
+
+msgid "Import qilish"
+msgstr "Импортировать"
+
+msgid "Instagram"
+msgstr "Instagram"
+
+msgid "Ishlanmoqda"
+msgstr "В работе"
+
+msgid "Ism yoki telefon"
+msgstr "Имя или телефон"
+
+msgid "Izoh"
+msgstr "Комментарий"
+
+msgid "Javob bermadi"
+msgstr "Не ответил"
+
+msgid "Keyingi qo'ng'iroq"
+msgstr "Следующий звонок"
+
+msgid "Kirish"
+msgstr "Вход"
+
+msgid "Kiruvchi qo'ng'iroq"
+msgstr "Входящий звонок"
+
+msgid "Ko'rsatish"
+msgstr "Показать"
+
+msgid "Konversiya"
+msgstr "Конверсия"
+
+msgid "Lid"
+msgstr "Лид"
+
+msgid "Lid holati"
+msgstr "Статус лида"
+
+msgid "Lid import"
+msgstr "Импорт лидов"
+
+msgid "Lid qo'shildi"
+msgstr "Лид добавлен"
+
+msgid "Lidlar"
+msgstr "Лиды"
+
+msgid "Lidlar holati"
+msgstr "Статусы лидов"
+
+msgid "Lidlar topilmadi"
+msgstr "Лиды не найдены"
+
+msgid "Lidlarni CSV fayldan import qilish"
+msgstr "Импорт лидов из CSV файла"
+
+msgid "Lidni tahrirlash"
+msgstr "Редактирование лида"
+
+msgid "Login"
+msgstr "Логин"
+
+msgid "Login yoki parol noto'g'ri"
+msgstr "Неверный логин или пароль"
+
+msgid "Manba"
+msgstr "Источник"
+
+msgid "Manbalar"
+msgstr "Источники"
+
+msgid "Manzil"
+msgstr "Адрес"
+
+msgid "Mas'ul"
+msgstr "Ответственный"
+
+msgid "Mas'ul xodim"
+msgstr "Ответственный сотрудник"
+
+msgid "Menejer"
+msgstr "Менеджер"
+
+msgid "Mening ishlarim"
+msgstr "Мои задачи"
+
+msgid "Mijoz"
+msgstr "Клиент"
+
+msgid "Muddati o'tgan"
+msgstr "Просрочено"
+
+msgid "Muddati o'tgan qo'ng'iroqlar"
+msgstr "Просроченные звонки"
+
+msgid "Namuna:"
+msgstr "Пример:"
+
+msgid "Narxi"
+msgstr "Цена"
+
+msgid "Natija"
+msgstr "Результат"
+
+msgid "Nomi"
+msgstr "Название"
+
+msgid "Noto'g'ri raqam"
+msgstr "Неверный номер"
+
+msgid "O'zbekcha"
+msgstr "Узбекский"
+
+msgid "Operator"
+msgstr "Оператор"
+
+msgid "Operatorga biriktirish"
+msgstr "Назначить оператору"
+
+msgid "Operatorlar samaradorligi"
+msgstr "Эффективность операторов"
+
+msgid "Operatorlar yo'q"
+msgstr "Операторов нет"
+
+msgid "Orqaga"
+msgstr "Назад"
+
+msgid "Parol"
+msgstr "Пароль"
+
+msgid "Qayta qo'ng'iroq"
+msgstr "Перезвонить"
+
+msgid "Qayta qo'ng'iroq so'radi"
+msgstr "Попросил перезвонить"
+
+msgid "Qidirish"
+msgstr "Поиск"
+
+msgid "Qiziqdi"
+msgstr "Заинтересован"
+
+msgid "Qo'ng'iroq"
+msgstr "Звонок"
+
+msgid "Qo'ng'iroq natijasi"
+msgstr "Результат звонка"
+
+msgid "Qo'ng'iroq natijasi saqlandi"
+msgstr "Результат звонка сохранён"
+
+msgid "Qo'ng'iroqlar"
+msgstr "Звонки"
+
+msgid "Qo'ng'iroqlar tarixi"
+msgstr "История звонков"
+
+msgid "Qo'shimcha telefon"
+msgstr "Доп. телефон"
+
+msgid "Rad etildi"
+msgstr "Отказ"
+
+msgid "Rejalashtirilgan vaqt"
+msgstr "Запланированное время"
+
+msgid "Rol"
+msgstr "Роль"
+
+msgid "Ruscha"
+msgstr "Русский"
+
+msgid "Sana"
+msgstr "Дата"
+
+msgid "Saqlandi"
+msgstr "Сохранено"
+
+msgid "Saqlash"
+msgstr "Сохранить"
+
+msgid "Sayt"
+msgstr "Сайт"
+
+msgid "Sotuv"
+msgstr "Продажа"
+
+msgid "Sotuv formasida xatolik bor"
+msgstr "В форме продажи есть ошибки"
+
+msgid "Sotuv holatiga o'tkazish uchun quyida sotuvni rasmiylashtiring"
+msgstr "Чтобы перевести в «Продажа», оформите продажу ниже"
+
+msgid "Sotuv izohi"
+msgstr "Комментарий к продаже"
+
+msgid "Sotuv qilindi"
+msgstr "Продажа совершена"
+
+msgid "Sotuv rasmiylashtirildi va xizmat buyurtmasi yaratildi"
+msgstr "Продажа оформлена, заказ на обслуживание создан"
+
+msgid "Sotuv voronkasi"
+msgstr "Воронка продаж"
+
+msgid "Sotuvlar"
+msgstr "Продажи"
+
+msgid "Sotuvni rasmiylashtirish"
+msgstr "Оформить продажу"
+
+msgid "Sozlamalar"
+msgstr "Настройки"
+
+msgid "Summa"
+msgstr "Сумма"
+
+msgid "Tahrirlash"
+msgstr "Редактировать"
+
+msgid "Tavsiya"
+msgstr "Рекомендация"
+
+msgid "Telefon"
+msgstr "Телефон"
+
+msgid "Telegram"
+msgstr "Telegram"
+
+msgid "Tushum"
+msgstr "Выручка"
+
+msgid ""
+"Ustunlar: full_name, phone, source, region, comment (birinchi qator — "
+"sarlavha)"
+msgstr ""
+"Столбцы: full_name, phone, source, region, comment (первая строка — "
+"заголовок)"
+
+msgid "Vaqt"
+msgstr "Время"
+
+msgid "Voronka"
+msgstr "Воронка"
+
+msgid "Xatolik"
+msgstr "Ошибка"
+
+msgid "Xizmat"
+msgstr "Услуга"
+
+msgid "Xizmat buyurtmalari"
+msgstr "Заказы на обслуживание"
+
+msgid "Xizmat buyurtmasi"
+msgstr "Заказ на обслуживание"
+
+msgid "Xizmat holati"
+msgstr "Статус обслуживания"
+
+msgid "Xizmat vaqti"
+msgstr "Время обслуживания"
+
+msgid "Xizmat xodimi"
+msgstr "Сотрудник сервиса"
+
+msgid "Xizmatlar"
+msgstr "Услуги"
+
+msgid "Yangi"
+msgstr "Новый"
+
+msgid "Yangi lid"
+msgstr "Новый лид"
+
+msgid "Yangi lidlar"
+msgstr "Новые лиды"
+
+msgid "Yaratilgan"
+msgstr "Создан"

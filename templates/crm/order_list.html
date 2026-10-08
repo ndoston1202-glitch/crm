@@ -1,0 +1,24 @@
+{% extends "base.html" %}{% load i18n crm_tags %}
+{% block title %}{% trans "Xizmat buyurtmalari" %}{% endblock %}
+{% block content %}
+<h3 class="mb-3">{% trans "Xizmat buyurtmalari" %}</h3>
+<div class="mb-3 d-flex flex-wrap gap-2">
+  <a href="?" class="btn btn-sm {% if not status %}btn-dark{% else %}btn-outline-dark{% endif %}">{% trans "Barchasi" %}</a>
+  {% for v, l in statuses %}<a href="?status={{ v }}" class="btn btn-sm {% if status == v %}btn-dark{% else %}btn-outline-dark{% endif %}">{{ l }}</a>{% endfor %}
+</div>
+<div class="card">
+<table class="table table-hover align-middle mb-0">
+  <thead><tr><th>#</th><th>{% trans "Mijoz" %}</th><th>{% trans "Telefon" %}</th><th>{% trans "Xizmat" %}</th><th>{% trans "Manzil" %}</th><th>{% trans "Vaqt" %}</th><th>{% trans "Mas'ul" %}</th><th>{% trans "Holat" %}</th></tr></thead>
+  <tbody>
+  {% for o in page %}
+  <tr onclick="location='{% url 'crm:order_edit' o.pk %}'" style="cursor:pointer">
+    <td>{{ o.pk }}</td><td>{{ o.sale.lead.full_name }}</td><td><a href="tel:{{ o.sale.lead.phone }}" onclick="event.stopPropagation()">{{ o.sale.lead.phone }}</a></td>
+    <td>{{ o.sale.service }}</td><td>{{ o.address|default:"—" }}</td><td>{{ o.scheduled_at|date:"d.m.Y H:i"|default:"—" }}</td>
+    <td>{{ o.assignee|default:"—" }}</td><td><span class="badge bg-{{ o.status|status_color }}">{{ o.get_status_display }}</span></td>
+  </tr>
+  {% empty %}<tr><td colspan="8" class="text-center text-muted py-4">{% trans "Buyurtmalar yo'q" %}</td></tr>{% endfor %}
+  </tbody>
+</table>
+</div>
+{% with querystring="status="|add:status %}{% include "crm/_pagination.html" %}{% endwith %}
+{% endblock %}

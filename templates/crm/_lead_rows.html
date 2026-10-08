@@ -1,0 +1,16 @@
+{% load i18n crm_tags %}
+<table class="table table-hover align-middle mb-0">
+  <thead><tr><th>{% trans "F.I.Sh." %}</th><th>{% trans "Telefon" %}</th><th>{% trans "Holat" %}</th><th>{% trans "Keyingi qo'ng'iroq" %}</th></tr></thead>
+  <tbody>
+  {% for lead in leads %}
+    <tr onclick="location='{% url 'crm:lead_detail' lead.pk %}'" style="cursor:pointer">
+      <td>{{ lead.full_name }}</td>
+      <td><a href="tel:{{ lead.phone }}" onclick="event.stopPropagation()">{{ lead.phone }}</a></td>
+      <td><span class="badge bg-{{ lead.status|status_color }}">{{ lead.get_status_display }}</span></td>
+      <td>{{ lead.next_call_at|date:"d.m.Y H:i"|default:"—" }}</td>
+    </tr>
+  {% empty %}
+    <tr><td colspan="4" class="text-muted text-center py-3">{% trans "Bo'sh" %}</td></tr>
+  {% endfor %}
+  </tbody>
+</table>

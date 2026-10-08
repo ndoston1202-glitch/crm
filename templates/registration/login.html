@@ -1,0 +1,16 @@
+{% extends "base.html" %}{% load i18n %}
+{% block title %}{% trans "Kirish" %}{% endblock %}
+{% block public %}
+<div class="container" style="max-width:380px;margin-top:12vh">
+  <div class="card shadow-sm"><div class="card-body p-4">
+    <h4 class="mb-3 text-center"><i class="bi bi-people-fill"></i> CRM</h4>
+    {% if form.errors %}<div class="alert alert-danger">{% trans "Login yoki parol noto'g'ri" %}</div>{% endif %}
+    <form method="post">{% csrf_token %}
+      <div class="mb-3"><label class="form-label">{% trans "Login" %}</label><input name="username" class="form-control" autofocus required></div>
+      <div class="mb-3"><label class="form-label">{% trans "Parol" %}</label><input type="password" name="password" class="form-control" required></div>
+      <input type="hidden" name="next" value="{{ next }}">
+      <button class="btn btn-primary w-100">{% trans "Kirish" %}</button>
+    </form>
+  </div></div>
+</div>
+{% endblock %}
