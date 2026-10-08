@@ -3,7 +3,6 @@ package uz.crm.recorder
 import android.content.ContentResolver
 import android.net.Uri
 import org.json.JSONObject
-import java.io.DataOutputStream
 import java.net.HttpURLConnection
 import java.net.URL
 import java.net.URLEncoder
@@ -40,42 +39,56 @@ object Api {
         return read(conn)
     }
 
+    /**
+     * Yozuvni multipart so'rov bilan yuboradi. Django serveri "chunked" so'rovni qabul qilmaydi,
+     * shuning uchun fayl avval vaqtinchalik faylga ko'chiriladi va aniq Content-Length bilan yuboriladi.
+     */
     fun upload(
         server: String,
         token: String,
         resolver: ContentResolver,
         rec: Recording,
+        cacheDir: java.io.File,
     ): JSONObject {
-        val boundary = "----crm" + System.currentTimeMillis()
-        val conn = open("$server/telephony/mobile/upload/")
-        conn.requestMethod = "POST"
-        conn.doOutput = true
-        conn.setChunkedStreamingMode(64 * 1024)
-        conn.setRequestProperty("Authorization", "Token $token")
-        conn.setRequestProperty("Content-Type", "multipart/form-data; boundary=$boundary")
+        val tmp = java.io.File.createTempFile("crm_upload", ".bin", cacheDir)
+        try {
+            resolver.openInputStream(rec.uri)?.use { input -> tmp.outputStream().use { input.copyTo(it, 64 * 1024) } }
+                ?: throw ApiException("Faylni o'qib bo'lmadi")
 
-        DataOutputStream(conn.outputStream).use { out ->
+            val boundary = "----crm" + System.currentTimeMillis()
+            val head = StringBuilder()
             fun field(name: String, value: String) {
-                out.writeBytes("--$boundary\r\n")
-                out.writeBytes("Content-Disposition: form-data; name=\"$name\"\r\n\r\n")
-                out.write(value.toByteArray(Charsets.UTF_8))
-                out.writeBytes("\r\n")
+                head.append("--$boundary\r\n")
+                head.append("Content-Disposition: form-data; name=\"$name\"\r\n\r\n")
+                head.append(value).append("\r\n")
             }
             field("phone", rec.phone)
             field("direction", rec.direction)
             field("started_at", rec.startedMs.toString())
             field("duration", rec.durationSec.toString())
             field("client_id", rec.clientId)
-
             val safeName = rec.fileName.replace("\"", "").replace("\r", "").replace("\n", "")
-            out.writeBytes("--$boundary\r\n")
-            out.write("Content-Disposition: form-data; name=\"file\"; filename=\"$safeName\"\r\n".toByteArray(Charsets.UTF_8))
-            out.writeBytes("Content-Type: application/octet-stream\r\n\r\n")
-            resolver.openInputStream(rec.uri)?.use { it.copyTo(out, 64 * 1024) }
-                ?: throw ApiException("Faylni o'qib bo'lmadi")
-            out.writeBytes("\r\n--$boundary--\r\n")
+            head.append("--$boundary\r\n")
+            head.append("Content-Disposition: form-data; name=\"file\"; filename=\"$safeName\"\r\n")
+            head.append("Content-Type: application/octet-stream\r\n\r\n")
+            val headBytes = head.toString().toByteArray(Charsets.UTF_8)
+            val tailBytes = "\r\n--$boundary--\r\n".toByteArray(Charsets.UTF_8)
+
+            val conn = open("$server/telephony/mobile/upload/")
+            conn.requestMethod = "POST"
+            conn.doOutput = true
+            conn.setFixedLengthStreamingMode(headBytes.size.toLong() + tmp.length() + tailBytes.size)
+            conn.setRequestProperty("Authorization", "Token $token")
+            conn.setRequestProperty("Content-Type", "multipart/form-data; boundary=$boundary")
+            conn.outputStream.use { out ->
+                out.write(headBytes)
+                tmp.inputStream().use { it.copyTo(out, 64 * 1024) }
+                out.write(tailBytes)
+            }
+            return read(conn)
+        } finally {
+            tmp.delete()
         }
-        return read(conn)
     }
 
     @Suppress("unused")

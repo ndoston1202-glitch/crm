@@ -154,7 +154,7 @@ class ShareActivity : Activity() {
                     startedMs = call.start,
                     durationSec = call.durationSec,
                 )
-                Api.upload(prefs.server, prefs.token, contentResolver, rec)
+                Api.upload(prefs.server, prefs.token, contentResolver, rec, cacheDir)
                 prefs.uploadedCount = prefs.uploadedCount + 1
                 val time = SimpleDateFormat("dd.MM HH:mm", Locale.getDefault()).format(Date())
                 prefs.addLog("$time  ✓ ${call.number} (ulashildi)")
@@ -162,12 +162,25 @@ class ShareActivity : Activity() {
             } catch (e: ApiException) {
                 if (e.code == 401) prefs.logout()
                 "Xato: ${e.message}"
+            } catch (e: java.net.ConnectException) {
+                "Serverga ulanib bo'lmadi: ${prefs.server} — CRM serveri yoqilganini va telefon shu Wi-Fi'da ekanini tekshiring"
+            } catch (e: java.net.SocketTimeoutException) {
+                "Server javob bermadi (vaqt tugadi): ${prefs.server}"
+            } catch (e: java.net.UnknownHostException) {
+                "Server manzili topilmadi: ${prefs.server}"
+            } catch (e: SecurityException) {
+                "Yozuv faylini o'qishga ruxsat berilmadi — qaytadan «Ulashish» qiling"
             } catch (e: Exception) {
-                "Serverga ulanib bo'lmadi"
+                "Xato: ${e.javaClass.simpleName}: ${e.message ?: ""}"
             }
             runOnUiThread {
-                toast(result)
-                if (result.startsWith("Yuklandi")) finish()
+                if (result.startsWith("Yuklandi")) {
+                    toast(result)
+                    finish()
+                } else {
+                    android.app.AlertDialog.Builder(this).setTitle("Yuklanmadi").setMessage(result)
+                        .setPositiveButton("OK", null).show()
+                }
             }
         }.start()
     }
