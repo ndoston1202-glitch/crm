@@ -173,6 +173,35 @@ RU = {
     "Yangilash uchun Git kerak va dastur git orqali o'rnatilgan bo'lishi kerak (Ornatish.bat buni sozlaydi).":
         "Для обновления нужен Git, и программа должна быть установлена через git (Ornatish.bat настраивает это).",
     "Yangilashni o'rnatish": "Установить обновление",
+    "ATS": "АТС",
+    "Android": "Android",
+    "Faylni MP3 ga aylantirib bo'lmadi — audio fayl ekanini tekshiring": "Не удалось конвертировать в MP3 — проверьте, что это аудиофайл",
+    "Faylni tanlang": "Выберите файл",
+    "Ilova faqat operatorlar uchun": "Приложение только для операторов",
+    "Ilovaga kiritiladigan server manzili": "Адрес сервера для приложения",
+    "Ilovaga server manzili, CRM login va parolingizni kiriting.": "Введите в приложении адрес сервера, логин и пароль CRM.",
+    "Ilovani yuklab oling va o'rnating («noma'lum manbalardan o'rnatish»ga ruxsat bering).":
+        "Скачайте и установите приложение (разрешите «установку из неизвестных источников»).",
+    "Ilovani yuklab olish (APK)": "Скачать приложение (APK)",
+    "Ovoz yozuvi yuklandi": "Запись загружена",
+    "Qo'lda yuklangan": "Загружено вручную",
+    "Qo'ng'iroq yozuvlari yo'q": "Записей звонков нет",
+    "Ruxsatlarni bering: qo'ng'iroqlar jurnali va audio fayllar.": "Дайте разрешения: журнал звонков и аудиофайлы.",
+    "Shundan keyin har bir qo'ng'iroq yozuvi 15 daqiqa ichida CRM ga tushadi, raqam bo'yicha lidga biriktiriladi va lid kartasida eshitiladi.":
+        "После этого каждая запись звонка в течение 15 минут попадает в CRM, привязывается к лиду по номеру и доступна в карточке лида.",
+    "Telefon CRM server bilan bir tarmoqda (Wi-Fi) bo'lishi yoki server internetdan ochiq bo'lishi kerak.":
+        "Телефон должен быть в одной сети (Wi-Fi) с сервером CRM, либо сервер должен быть доступен из интернета.",
+    "Telefon ilovasi": "Мобильное приложение",
+    "Telefon ilovasi orqali qo'ng'iroqdan avtomatik yaratildi": "Создан автоматически из звонка (мобильное приложение)",
+    "Telefon ilovasi — qo'ng'iroq yozuvlarini avtomatik yuklash": "Мобильное приложение — автоматическая загрузка записей звонков",
+    "Telefonda qo'ng'iroqlarni avtomatik yozishni yoqing: Telefon → Sozlamalar → Qo'ng'iroqlarni yozish.":
+        "Включите автоматическую запись звонков: Телефон → Настройки → Запись вызовов.",
+    "Xiaomi, Huawei, Oppo va boshqalarda ilova uchun batareya cheklovini o'chiring.":
+        "На Xiaomi, Huawei, Oppo и др. отключите ограничение батареи для приложения.",
+    "Yozuvni qo'lda yuklash (iPhone va boshqalar):": "Загрузить запись вручную (iPhone и др.):",
+    "Yuklash": "Загрузить",
+    "iPhone qo'ng'iroq yozuvlarini boshqa ilovalarga bermaydi, shuning uchun avtomatik yuklash imkonsiz. Yozuvni lid kartasidagi «Yozuvni qo'lda yuklash» orqali yuklang.":
+        "iPhone не даёт другим приложениям доступ к записям звонков, поэтому автозагрузка невозможна. Загрузите запись через «Загрузить запись вручную» в карточке лида.",
     "ATS orqali qo'ng'iroqlar yo'q": "Звонков через АТС нет",
     "ATS xatosi: %(e)s": "Ошибка АТС: %(e)s",
     "ATS: javob / jami": "АТС: отвечено / всего",

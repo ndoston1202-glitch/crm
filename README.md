@@ -26,6 +26,7 @@ Yangi versiya chiqqanda o'ng yuqoridagi 🔔 qo'ng'iroqchada xabar paydo bo'ladi
 | **Operator ish joyi** | Bugungi va muddati o'tgan qo'ng'iroqlar, qo'ng'iroq natijasi va izohi |
 | **Sotuv va xizmat** | Sotuvdan so'ng xizmat buyurtmasi, servis xodimiga biriktirish |
 | **IP-telefoniya** | Bir bosishda qo'ng'iroq, kiruvchi qo'ng'iroq oynasi, MP3 ovoz yozuvlari lid kartasida |
+| **Telefon ilovasi (Android)** | Operator telefonida yozilgan qo'ng'iroqlarni CRMga avtomatik yuklaydi (`mobile/android`). iPhone uchun — lid kartasidan qo'lda yuklash |
 | **Bildirishnomalar 🔔** | Qo'ng'iroq vaqti keldi, yangi lid biriktirildi, yangi buyurtma, o'tkazib yuborilgan qo'ng'iroq, yangi versiya |
 | **Hisobotlar** | Lidlar, sotuvlar, konversiya, tushum, operatorlar reytingi, qo'ng'iroq statistikasi |
 
@@ -43,6 +44,7 @@ Foydalanuvchilar va xizmatlar **Sozlamalar** bo'limida qo'shiladi.
 | `system/` | Dastur ichidan yangilash |
 | `accounts/` | Foydalanuvchilar va rollar |
 | `templates/`, `static/` | Interfeys |
+| `mobile/android/` | Android ilova (APK GitHub Actions'da yig'iladi → Releases → `android-latest`) |
 | `docs/` | Asterisk ulash yo'riqnomasi |
 | `tools/` | O'rnatuvchi va tarjima skriptlari |
 

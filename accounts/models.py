@@ -17,6 +17,8 @@ class User(AbstractUser):
         help_text=_("Asterisk'dagi operator ichki raqami, masalan 101"),
     )
 
+    api_token = models.CharField(max_length=64, unique=True, null=True, blank=True, editable=False)
+
     @property
     def is_manager(self):
         return self.is_superuser or self.role in (self.Role.ADMIN, self.Role.MANAGER)

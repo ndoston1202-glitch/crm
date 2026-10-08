@@ -5,6 +5,9 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Plural-Forms: nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2);\n"
 
+msgid "ATS"
+msgstr "АТС"
+
 msgid "ATS orqali qo'ng'iroqlar yo'q"
 msgstr "Звонков через АТС нет"
 
@@ -16,6 +19,9 @@ msgstr "АТС: отвечено / всего"
 
 msgid "Administrator"
 msgstr "Администратор"
+
+msgid "Android"
+msgstr "Android"
 
 msgid "Asterisk'dagi operator ichki raqami, masalan 101"
 msgstr "Внутренний номер оператора в Asterisk, например 101"
@@ -125,6 +131,12 @@ msgstr "Facebook"
 msgid "Faol"
 msgstr "Активна"
 
+msgid "Faylni MP3 ga aylantirib bo'lmadi — audio fayl ekanini tekshiring"
+msgstr "Не удалось конвертировать в MP3 — проверьте, что это аудиофайл"
+
+msgid "Faylni tanlang"
+msgstr "Выберите файл"
+
 msgid "Formada xatolik bor"
 msgstr "В форме есть ошибки"
 
@@ -157,6 +169,25 @@ msgstr "Внутренний номер"
 
 msgid "Ichki raqam (SIP)"
 msgstr "Внутренний номер (SIP)"
+
+msgid "Ilova faqat operatorlar uchun"
+msgstr "Приложение только для операторов"
+
+msgid "Ilovaga kiritiladigan server manzili"
+msgstr "Адрес сервера для приложения"
+
+msgid "Ilovaga server manzili, CRM login va parolingizni kiriting."
+msgstr "Введите в приложении адрес сервера, логин и пароль CRM."
+
+msgid ""
+"Ilovani yuklab oling va o'rnating («noma'lum manbalardan o'rnatish»ga ruxsat"
+" bering)."
+msgstr ""
+"Скачайте и установите приложение (разрешите «установку из неизвестных "
+"источников»)."
+
+msgid "Ilovani yuklab olish (APK)"
+msgstr "Скачать приложение (APK)"
 
 msgid "Import"
 msgstr "Импорт"
@@ -353,6 +384,9 @@ msgstr "Запись разговора"
 msgid "Ovoz yozuvi hali yuklanmagan"
 msgstr "Запись ещё не загружена"
 
+msgid "Ovoz yozuvi yuklandi"
+msgstr "Запись загружена"
+
 msgid "Parol"
 msgstr "Пароль"
 
@@ -371,6 +405,9 @@ msgstr "Поиск"
 msgid "Qiziqdi"
 msgstr "Заинтересован"
 
+msgid "Qo'lda yuklangan"
+msgstr "Загружено вручную"
+
 msgid "Qo'ng'iroq"
 msgstr "Звонок"
 
@@ -385,6 +422,9 @@ msgstr "Время звонка"
 
 msgid "Qo'ng'iroq vaqti keldi: %(name)s"
 msgstr "Пора позвонить: %(name)s"
+
+msgid "Qo'ng'iroq yozuvlari yo'q"
+msgstr "Записей звонков нет"
 
 msgid "Qo'ng'iroqlar"
 msgstr "Звонки"
@@ -410,6 +450,9 @@ msgstr "Роль"
 msgid "Ruscha"
 msgstr "Русский"
 
+msgid "Ruxsatlarni bering: qo'ng'iroqlar jurnali va audio fayllar."
+msgstr "Дайте разрешения: журнал звонков и аудиофайлы."
+
 msgid "Sana"
 msgstr "Дата"
 
@@ -434,6 +477,13 @@ msgid ""
 "bosing)."
 msgstr ""
 "Перезапустите сервер вручную (закройте окно и снова нажмите значок CRM)."
+
+msgid ""
+"Shundan keyin har bir qo'ng'iroq yozuvi 15 daqiqa ichida CRM ga tushadi, "
+"raqam bo'yicha lidga biriktiriladi va lid kartasida eshitiladi."
+msgstr ""
+"После этого каждая запись звонка в течение 15 минут попадает в CRM, "
+"привязывается к лиду по номеру и доступна в карточке лида."
 
 msgid "Sizda eng so'nggi versiya"
 msgstr "У вас последняя версия"
@@ -495,11 +545,34 @@ msgstr "Рекомендация"
 msgid "Telefon"
 msgstr "Телефон"
 
+msgid ""
+"Telefon CRM server bilan bir tarmoqda (Wi-Fi) bo'lishi yoki server "
+"internetdan ochiq bo'lishi kerak."
+msgstr ""
+"Телефон должен быть в одной сети (Wi-Fi) с сервером CRM, либо сервер должен "
+"быть доступен из интернета."
+
+msgid "Telefon ilovasi"
+msgstr "Мобильное приложение"
+
+msgid "Telefon ilovasi orqali qo'ng'iroqdan avtomatik yaratildi"
+msgstr "Создан автоматически из звонка (мобильное приложение)"
+
+msgid "Telefon ilovasi — qo'ng'iroq yozuvlarini avtomatik yuklash"
+msgstr "Мобильное приложение — автоматическая загрузка записей звонков"
+
 msgid "Telefon qo'ng'irog'i"
 msgstr "Телефонный звонок"
 
 msgid "Telefon qo'ng'iroqlari"
 msgstr "Телефонные звонки"
+
+msgid ""
+"Telefonda qo'ng'iroqlarni avtomatik yozishni yoqing: Telefon → Sozlamalar → "
+"Qo'ng'iroqlarni yozish."
+msgstr ""
+"Включите автоматическую запись звонков: Телефон → Настройки → Запись "
+"вызовов."
 
 msgid "Telefoningiz jiringlaydi, go'shakni ko'taring"
 msgstr "Ваш телефон звонит — поднимите трубку"
@@ -525,6 +598,12 @@ msgstr "Воронка"
 
 msgid "Xatolik"
 msgstr "Ошибка"
+
+msgid ""
+"Xiaomi, Huawei, Oppo va boshqalarda ilova uchun batareya cheklovini "
+"o'chiring."
+msgstr ""
+"На Xiaomi, Huawei, Oppo и др. отключите ограничение батареи для приложения."
 
 msgid "Xizmat"
 msgstr "Услуга"
@@ -602,5 +681,20 @@ msgstr "Создан"
 msgid "Yo'nalish"
 msgstr "Направление"
 
+msgid "Yozuvni qo'lda yuklash (iPhone va boshqalar):"
+msgstr "Загрузить запись вручную (iPhone и др.):"
+
 msgid "Yuklab olish"
 msgstr "Скачать"
+
+msgid "Yuklash"
+msgstr "Загрузить"
+
+msgid ""
+"iPhone qo'ng'iroq yozuvlarini boshqa ilovalarga bermaydi, shuning uchun "
+"avtomatik yuklash imkonsiz. Yozuvni lid kartasidagi «Yozuvni qo'lda yuklash»"
+" orqali yuklang."
+msgstr ""
+"iPhone не даёт другим приложениям доступ к записям звонков, поэтому "
+"автозагрузка невозможна. Загрузите запись через «Загрузить запись вручную» в"
+" карточке лида."

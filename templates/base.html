@@ -26,6 +26,9 @@
       <li><a class="nav-link {% nav_active 'lead_list' 'lead_detail' 'lead_edit' 'lead_create' %}" href="{% url 'crm:lead_list' %}"><i class="bi bi-person-lines-fill"></i> {% trans "Lidlar" %}</a></li>
       <li><a class="nav-link {% nav_active 'lead_kanban' %}" href="{% url 'crm:lead_kanban' %}"><i class="bi bi-kanban"></i> {% trans "Voronka" %}</a></li>
       {% endif %}
+      {% if not user.is_service %}
+      <li><a class="nav-link {% nav_active 'mobile_app' %}" href="{% url 'telephony:mobile_app' %}"><i class="bi bi-phone"></i> {% trans "Telefon ilovasi" %}</a></li>
+      {% endif %}
       {% if user.is_manager or user.is_service %}
       <li><a class="nav-link {% nav_active 'order_list' 'order_edit' %}" href="{% url 'crm:order_list' %}"><i class="bi bi-tools"></i> {% trans "Xizmat buyurtmalari" %}</a></li>
       {% endif %}

@@ -1,6 +1,5 @@
 import mimetypes
 import os
-import shutil
 from datetime import timedelta
 
 from django.conf import settings
@@ -20,7 +19,7 @@ from crm.views import visible_leads
 from notifications.services import managers, notify
 
 from . import ami
-from .audio import ConversionError, to_mp3
+from .audio import ConversionError
 from .models import PhoneCall
 from .utils import normalize_phone
 
@@ -200,18 +199,12 @@ def upload_recording(request):
         call = PhoneCall.objects.filter(uniqueid=uniqueid).first()
     if call is None:
         return JsonResponse({"ok": False, "error": "unknown call"}, status=404)
+    from .mobile_api import save_recording
+
     try:
-        name, mp3, tmpdir = to_mp3(upload)
+        save_recording(call, upload)
     except ConversionError as exc:
         return JsonResponse({"ok": False, "error": f"mp3 conversion failed: {exc}"}, status=500)
-    try:
-        if call.recording:
-            call.recording.delete(save=False)
-        call.recording.save(f"{call.pk}_{name}", mp3, save=True)
-    finally:
-        if tmpdir:
-            mp3.close()
-            shutil.rmtree(tmpdir, ignore_errors=True)
     return JsonResponse({"ok": True, "call_id": call.pk, "file": call.recording.name})
 
 
@@ -231,3 +224,58 @@ def recording(request, pk):
     content_type = mimetypes.guess_type(call.recording.name)[0] or "audio/mpeg"
     # FileResponse Range so'rovlarini qo'llaydi — pleerda oldinga/orqaga surish ishlaydi
     return FileResponse(handle, content_type=content_type, filename=os.path.basename(call.recording.name))
+
+
+@login_required
+@require_POST
+def manual_upload(request, lead_pk):
+    """iPhone yoki boshqa qurilmadagi yozuvni lid kartasidan qo'lda yuklash."""
+    from django.contrib import messages
+    from django.shortcuts import redirect
+
+    from .mobile_api import save_recording
+
+    lead = get_object_or_404(visible_leads(request.user), pk=lead_pk)
+    upload = request.FILES.get("file")
+    if not upload:
+        messages.error(request, _("Faylni tanlang"))
+        return redirect("crm:lead_detail", pk=lead.pk)
+    call = PhoneCall.objects.create(
+        source=PhoneCall.Source.MANUAL,
+        direction=PhoneCall.Direction.INCOMING if request.POST.get("direction") == "in" else PhoneCall.Direction.OUTGOING,
+        status=PhoneCall.Status.ANSWERED,
+        phone=lead.phone,
+        lead=lead,
+        operator=request.user,
+        ended_at=timezone.now(),
+    )
+    try:
+        save_recording(call, upload)
+    except ConversionError:
+        call.delete()
+        messages.error(request, _("Faylni MP3 ga aylantirib bo'lmadi — audio fayl ekanini tekshiring"))
+        return redirect("crm:lead_detail", pk=lead.pk)
+    messages.success(request, _("Ovoz yozuvi yuklandi"))
+    return redirect("crm:lead_detail", pk=lead.pk)
+
+
+APK_URL = "https://github.com/ndoston1202-glitch/crm/releases/download/android-latest/CRM-yozuvlar.apk"
+
+
+@login_required
+def mobile_app(request):
+    from django.shortcuts import render
+
+    server_url = request.build_absolute_uri("/").rstrip("/")
+    if "localhost" in server_url or "127.0.0.1" in server_url:
+        # Telefon "localhost" ga ulana olmaydi — kompyuterning tarmoqdagi IP manzilini ko'rsatamiz
+        import socket
+
+        try:
+            with socket.socket(socket.AF_INET, socket.SOCK_DGRAM) as sock:
+                sock.connect(("8.8.8.8", 80))
+                ip = sock.getsockname()[0]
+            server_url = f"http://{ip}:{request.get_port()}"
+        except OSError:
+            pass
+    return render(request, "telephony/mobile_app.html", {"server_url": server_url, "apk_url": APK_URL})

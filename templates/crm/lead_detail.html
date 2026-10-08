@@ -60,6 +60,7 @@
               <strong>{{ pc.get_direction_display }}</strong> · {{ pc.phone }}
               <span class="badge bg-{% if pc.status == 'answered' %}success{% elif pc.status == 'ringing' %}warning{% else %}danger{% endif %}">{{ pc.get_status_display }}</span>
               {% if pc.duration %}<span class="text-muted"><i class="bi bi-stopwatch"></i> {{ pc.duration_display }}</span>{% endif %}
+              {% if pc.source != "asterisk" %}<span class="badge text-bg-light border"><i class="bi bi-phone"></i> {{ pc.get_source_display }}</span>{% endif %}
             </div>
             <small class="text-muted">{{ pc.started_at|date:"d.m.Y H:i" }} · {{ pc.operator|default:pc.extension|default:"—" }}</small>
           </div>
@@ -72,8 +73,18 @@
           {% endfor %}
           {% if pc.transcript %}<details class="mt-2"><summary class="small">{% trans "Suhbat matni" %}</summary><div class="small">{{ pc.transcript|linebreaksbr }}</div></details>{% endif %}
         </li>
-      {% empty %}<li class="list-group-item text-muted">{% trans "ATS orqali qo'ng'iroqlar yo'q" %}</li>{% endfor %}
+      {% empty %}<li class="list-group-item text-muted">{% trans "Qo'ng'iroq yozuvlari yo'q" %}</li>{% endfor %}
       </ul>
+      <div class="card-footer">
+        <form method="post" enctype="multipart/form-data" action="{% url 'telephony:manual_upload' lead.pk %}" class="d-flex flex-wrap gap-2 align-items-center">{% csrf_token %}
+          <span class="small text-muted"><i class="bi bi-upload"></i> {% trans "Yozuvni qo'lda yuklash (iPhone va boshqalar):" %}</span>
+          <input type="file" name="file" accept="audio/*,.m4a,.amr,.3gp,.wav,.mp3,.ogg,.aac" class="form-control form-control-sm" style="max-width:260px" required>
+          <select name="direction" class="form-select form-select-sm" style="max-width:150px">
+            <option value="out">{% trans "Chiquvchi" %}</option><option value="in">{% trans "Kiruvchi" %}</option>
+          </select>
+          <button class="btn btn-sm btn-outline-primary">{% trans "Yuklash" %}</button>
+        </form>
+      </div>
     </div>
 
     <div class="card"><div class="card-header fw-semibold"><i class="bi bi-clock-history"></i> {% trans "Boshqa izohlar" %}</div>

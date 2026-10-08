@@ -15,7 +15,15 @@ class PhoneCall(models.Model):
         BUSY = "busy", _("Band")
         FAILED = "failed", _("Xatolik")
 
+    class Source(models.TextChoices):
+        ASTERISK = "asterisk", _("ATS")
+        MOBILE = "mobile", _("Telefon ilovasi")
+        MANUAL = "manual", _("Qo'lda yuklangan")
+
     uniqueid = models.CharField(max_length=64, blank=True, db_index=True)
+    source = models.CharField(_("Manba"), max_length=10, choices=Source.choices, default=Source.ASTERISK)
+    # Telefon ilovasi yuborgan fayl identifikatori — bir yozuv ikki marta yuklanmasligi uchun
+    client_id = models.CharField(max_length=120, null=True, blank=True, unique=True)
     direction = models.CharField(_("Yo'nalish"), max_length=3, choices=Direction.choices)
     status = models.CharField(_("Holat"), max_length=20, choices=Status.choices, default=Status.RINGING, db_index=True)
     phone = models.CharField(_("Mijoz raqami"), max_length=32)

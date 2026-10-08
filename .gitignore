@@ -5,3 +5,7 @@ db.sqlite3
 .venv/
 staticfiles/
 media/
+mobile/android/.gradle/
+mobile/android/build/
+mobile/android/app/build/
+mobile/android/local.properties
