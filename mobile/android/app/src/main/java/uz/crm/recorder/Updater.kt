@@ -70,6 +70,12 @@ object Updater {
 
 /** O'rnatish natijasi: tizim foydalanuvchidan tasdiq so'rasa — tasdiqlash oynasini ochamiz. */
 class InstallReceiver : BroadcastReceiver() {
+    companion object {
+        /** Ilova fonda bo'lsa, tasdiqlash oynasi ilova ochilganda ko'rsatiladi. */
+        @Volatile
+        var pendingConfirm: Intent? = null
+    }
+
     override fun onReceive(context: Context, intent: Intent) {
         when (intent.getIntExtra(PackageInstaller.EXTRA_STATUS, PackageInstaller.STATUS_FAILURE)) {
             PackageInstaller.STATUS_PENDING_USER_ACTION -> {
@@ -77,7 +83,14 @@ class InstallReceiver : BroadcastReceiver() {
                 val confirm = if (Build.VERSION.SDK_INT >= 33) intent.getParcelableExtra(Intent.EXTRA_INTENT, Intent::class.java)
                 else intent.getParcelableExtra(Intent.EXTRA_INTENT) as? Intent
                 confirm?.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
-                confirm?.let { context.startActivity(it) }
+                if (confirm != null) {
+                    if (MainActivity.resumed) {
+                        try { context.startActivity(confirm) } catch (e: Exception) { pendingConfirm = confirm }
+                    } else {
+                        pendingConfirm = confirm
+                        Toast.makeText(context, "Yangilashni tasdiqlash uchun «CRM yozuvlar»ni oching", Toast.LENGTH_LONG).show()
+                    }
+                }
             }
             PackageInstaller.STATUS_SUCCESS -> Toast.makeText(context, "Ilova yangilandi", Toast.LENGTH_LONG).show()
             else -> Toast.makeText(

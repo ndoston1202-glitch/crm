@@ -3,6 +3,9 @@ package uz.crm.recorder
 import android.app.AlertDialog
 import android.content.Context
 import android.provider.CallLog
+import android.text.InputType
+import android.widget.EditText
+import android.widget.Toast
 import java.text.SimpleDateFormat
 import java.util.Date
 import java.util.Locale
@@ -51,17 +54,34 @@ object Calls {
         return "$arrow  ${call.number}   ${fmt.format(Date(call.start))} · ${call.durationSec / 60}:${"%02d".format(call.durationSec % 60)}"
     }
 
-    /** Oxirgi qo'ng'iroqlardan birini tanlash oynasi. */
+    /** Oxirgi qo'ng'iroqlardan birini tanlash oynasi (raqamni qo'lda kiritish ham mumkin). */
     fun pick(context: Context, title: String, onPicked: (CallEntry) -> Unit) {
         val calls = load(context, limit = 40)
         if (calls.isEmpty()) {
-            AlertDialog.Builder(context).setTitle(title)
-                .setMessage("Qo'ng'iroqlar jurnali bo'sh yoki ruxsat berilmagan.")
-                .setPositiveButton("OK", null).show()
+            manual(context, title, "Qo'ng'iroqlar jurnali bo'sh yoki ruxsat berilmagan. Mijoz raqamini kiriting:", onPicked)
             return
         }
         AlertDialog.Builder(context).setTitle(title)
             .setItems(calls.map { label(it) }.toTypedArray()) { _, which -> onPicked(calls[which]) }
+            .setNeutralButton("Raqamni qo'lda kiritish") { _, _ -> manual(context, title, "Mijoz raqamini kiriting:", onPicked) }
+            .setNegativeButton("Bekor qilish", null)
+            .show()
+    }
+
+    private fun manual(context: Context, title: String, message: String, onPicked: (CallEntry) -> Unit) {
+        val input = EditText(context).apply {
+            inputType = InputType.TYPE_CLASS_PHONE
+            hint = "+998 90 123 45 67"
+        }
+        AlertDialog.Builder(context).setTitle(title).setMessage(message).setView(input)
+            .setPositiveButton("OK") { _, _ ->
+                val number = input.text.toString().filter { it.isDigit() || it == '+' }
+                if (number.count { it.isDigit() } >= 7) {
+                    onPicked(CallEntry(number, CallLog.Calls.OUTGOING_TYPE, System.currentTimeMillis(), 0))
+                } else {
+                    Toast.makeText(context, "Raqam noto'g'ri", Toast.LENGTH_LONG).show()
+                }
+            }
             .setNegativeButton("Bekor qilish", null)
             .show()
     }
