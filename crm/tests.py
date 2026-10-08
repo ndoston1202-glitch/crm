@@ -76,4 +76,23 @@ class CrmFlowTests(TestCase):
     def test_russian_ui(self):
         self.client.force_login(self.admin)
         self.client.cookies["django_language"] = "ru"
-        self.assertContains(self.client.get(reverse("crm:reports")), "Отчёты")
+        self.assertContains(self.client.get(reverse("crm:reports")), "Аналитика")
+
+
+class DashboardTests(TestCase):
+    def test_dashboard_scoped(self):
+        from .models import Lead, Sale, Service
+
+        admin = User.objects.create_user("admin", password="x", role=User.Role.ADMIN)
+        op = User.objects.create_user("op", password="x", role=User.Role.OPERATOR)
+        mine = Lead.objects.create(full_name="Mine", phone="1", operator=op)
+        Lead.objects.create(full_name="Other", phone="2")
+        Sale.objects.create(lead=mine, service=Service.objects.create(name="S", price=1), amount=500, operator=op)
+        self.client.force_login(op)
+        d = self.client.get(reverse("crm:dashboard_page")).context["d"]
+        self.assertEqual((d["today"]["leads"], d["today"]["sales"], d["today"]["revenue"]), (1, 1, 500.0))
+        self.assertEqual(d["series"]["leads"][-1], 1)
+        self.client.force_login(admin)
+        d = self.client.get(reverse("crm:dashboard_page")).context["d"]
+        self.assertEqual(d["today"]["leads"], 2)
+        self.assertEqual(d["top"][0]["s"], 500.0)

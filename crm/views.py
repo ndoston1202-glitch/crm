@@ -1,5 +1,6 @@
 import csv
 import io
+from functools import wraps
 from datetime import timedelta
 
 from django.contrib import messages
@@ -27,45 +28,67 @@ from .models import Call, Lead, Sale, ServiceOrder
 User = get_user_model()
 
 
-def manager_required(view):
-    @login_required
-    def wrapper(request, *args, **kwargs):
-        if not request.user.is_manager:
-            raise PermissionDenied
-        return view(request, *args, **kwargs)
+def module_required(module):
+    """Sahifani faqat shu modulga ruxsati bor foydalanuvchilar ochadi."""
 
-    return wrapper
+    def decorator(view):
+        @login_required
+        @wraps(view)
+        def wrapper(request, *args, **kwargs):
+            if not request.user.can(module):
+                raise PermissionDenied
+            return view(request, *args, **kwargs)
+
+        return wrapper
+
+    return decorator
 
 
 def visible_leads(user):
     qs = Lead.objects.select_related("operator")
+    if not user.can("leads"):
+        return qs.none()
     if user.is_manager:
         return qs
-    if user.is_operator:
-        return qs.filter(operator=user)
-    return qs.none()
+    return qs.filter(operator=user)
 
 
 def visible_orders(user):
     qs = ServiceOrder.objects.select_related("sale__lead", "sale__service", "assignee")
+    if not user.can("orders"):
+        return qs.none()
     if user.is_manager:
         return qs
-    if user.is_service:
-        return qs.filter(assignee=user)
-    return qs.none()
+    return qs.filter(assignee=user)
 
 
 @login_required
 def dashboard(request):
-    user = request.user
-    if user.is_service:
-        return redirect("crm:order_list")
-    if user.is_operator:
-        return redirect("crm:my_work")
-    return redirect("crm:reports")
+    """Bosh sahifa: foydalanuvchiga ruxsat berilgan birinchi bo'lim."""
+    from accounts.permissions import HOME_ORDER
+
+    for module, url_name in HOME_ORDER:
+        if request.user.can(module):
+            return redirect(url_name)
+    return render(request, "crm/no_access.html")
 
 
-@login_required
+@module_required("dashboard")
+def dashboard_page(request):
+    from .analytics import dashboard_data
+
+    data = dashboard_data(request.user)
+    hr_pending = None
+    if request.user.can("hr"):
+        from hr.models import LeaveRequest
+
+        hr_pending = LeaveRequest.objects.filter(status=LeaveRequest.Status.PENDING).count()
+    return render(request, "crm/dashboard.html", {"d": data, "hr_pending": hr_pending, "chart": {
+        "series": data["series"], "funnel": data["funnel"], "sources": data["sources"],
+    }})
+
+
+@module_required("leads")
 def my_work(request):
     user = request.user
     now = timezone.now()
@@ -81,7 +104,7 @@ def my_work(request):
     return render(request, "crm/my_work.html", context)
 
 
-@login_required
+@module_required("leads")
 def lead_list(request):
     leads = visible_leads(request.user)
     q = request.GET.get("q", "").strip()
@@ -113,7 +136,7 @@ def lead_list(request):
     )
 
 
-@login_required
+@module_required("leads")
 def lead_kanban(request):
     leads = visible_leads(request.user)
     if request.user.is_manager and request.GET.get("operator"):
@@ -129,10 +152,8 @@ def lead_kanban(request):
     )
 
 
-@login_required
+@module_required("leads")
 def lead_create(request):
-    if not (request.user.is_manager or request.user.is_operator):
-        raise PermissionDenied
     form = LeadForm(request.POST or None, user=request.user)
     if request.method == "POST" and form.is_valid():
         lead = form.save(commit=False)
@@ -150,7 +171,7 @@ def lead_create(request):
     return render(request, "crm/lead_form.html", {"form": form, "duplicates": duplicates})
 
 
-@login_required
+@module_required("leads")
 def lead_edit(request, pk):
     lead = get_object_or_404(visible_leads(request.user), pk=pk)
     form = LeadForm(request.POST or None, instance=lead, user=request.user)
@@ -162,7 +183,7 @@ def lead_edit(request, pk):
     return render(request, "crm/lead_form.html", {"form": form, "lead": lead})
 
 
-@login_required
+@module_required("leads")
 def lead_detail(request, pk):
     lead = get_object_or_404(visible_leads(request.user), pk=pk)
     return render(
@@ -179,7 +200,7 @@ def lead_detail(request, pk):
     )
 
 
-@login_required
+@module_required("leads")
 @require_POST
 def lead_set_status(request, pk):
     lead = get_object_or_404(visible_leads(request.user), pk=pk)
@@ -193,7 +214,7 @@ def lead_set_status(request, pk):
     return JsonResponse({"ok": True})
 
 
-@login_required
+@module_required("leads")
 @require_POST
 def call_add(request, pk):
     lead = get_object_or_404(visible_leads(request.user), pk=pk)
@@ -225,7 +246,7 @@ def call_add(request, pk):
     return redirect("crm:lead_detail", pk=lead.pk)
 
 
-@login_required
+@module_required("leads")
 @require_POST
 def sale_add(request, pk):
     lead = get_object_or_404(visible_leads(request.user), pk=pk)
@@ -253,7 +274,7 @@ def sale_add(request, pk):
     return redirect("crm:lead_detail", pk=lead.pk)
 
 
-@manager_required
+@module_required("import")
 def lead_import(request):
     form = LeadImportForm(request.POST or None, request.FILES or None)
     if request.method == "POST" and form.is_valid():
@@ -297,7 +318,7 @@ def lead_import(request):
     return render(request, "crm/lead_import.html", {"form": form})
 
 
-@login_required
+@module_required("orders")
 def order_list(request):
     orders = visible_orders(request.user)
     status = request.GET.get("status", "")
@@ -309,7 +330,7 @@ def order_list(request):
     )
 
 
-@login_required
+@module_required("orders")
 def order_edit(request, pk):
     order = get_object_or_404(visible_orders(request.user), pk=pk)
     form = ServiceOrderForm(request.POST or None, instance=order, user=request.user)
@@ -326,7 +347,7 @@ def order_edit(request, pk):
     return render(request, "crm/order_form.html", {"form": form, "order": order})
 
 
-@manager_required
+@module_required("reports")
 def reports(request):
     today = timezone.localdate()
     date_from = parse_date(request.GET.get("from", "") or "") or today - timedelta(days=29)
@@ -383,10 +404,14 @@ def reports(request):
     orders = ServiceOrder.objects.filter(created_at__date__range=(date_from, date_to))
     order_status = {r["status"]: r["n"] for r in orders.values("status").annotate(n=Count("id"))}
 
+    from .analytics import daily_series
+
+    trend = daily_series(date_from, min(date_to, date_from + timedelta(days=365)), Lead.objects.all(), Sale.objects.all())
     return render(
         request,
         "crm/reports.html",
         {
+            "trend": trend,
             "date_from": date_from,
             "date_to": date_to,
             "total_leads": total_leads,

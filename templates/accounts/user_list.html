@@ -1,0 +1,27 @@
+{% extends "base.html" %}{% load i18n %}
+{% block title %}{% trans "Foydalanuvchilar" %}{% endblock %}
+{% block content %}
+<div class="d-flex justify-content-between align-items-center mb-3">
+  <h3 class="mb-0">{% trans "Foydalanuvchilar va ruxsatlar" %}</h3>
+  <a href="{% url 'accounts:user_create' %}" class="btn btn-primary"><i class="bi bi-person-plus"></i> {% trans "Yangi foydalanuvchi" %}</a>
+</div>
+<div class="card"><div class="table-responsive">
+<table class="table table-hover align-middle mb-0">
+  <thead><tr><th>{% trans "Foydalanuvchi" %}</th><th>{% trans "Login" %}</th><th>{% trans "Rol" %}</th><th>{% trans "Dostup" %}</th><th>{% trans "Ma'lumotlar doirasi" %}</th><th>{% trans "Holat" %}</th></tr></thead>
+  <tbody>
+  {% for r in rows %}{% with u=r.user %}
+  <tr onclick="location='{% url 'accounts:user_edit' u.pk %}'" style="cursor:pointer" class="{% if not u.is_active %}text-muted{% endif %}">
+    <td class="fw-semibold">{{ u.get_full_name|default:u.username }}</td>
+    <td>{{ u.username }}</td>
+    <td>{{ u.get_role_display }}</td>
+    <td>{% if u.has_full_access %}<span class="badge bg-success">{% trans "To'liq dostup" %}</span>
+        {% else %}<span class="badge bg-warning text-dark">{% trans "Cheklangan" %}</span>
+        <div class="small text-muted">{{ r.modules|join:", "|default:"—" }}</div>{% endif %}</td>
+    <td>{% if u.has_full_access %}{% trans "Barcha ma'lumotlar" %}{% else %}{{ u.get_data_scope_display }}{% endif %}</td>
+    <td>{% if u.is_active %}<span class="text-success">{% trans "Faol" %}</span>{% else %}{% trans "O'chirilgan" %}{% endif %}</td>
+  </tr>
+  {% endwith %}{% endfor %}
+  </tbody>
+</table>
+</div></div>
+{% endblock %}

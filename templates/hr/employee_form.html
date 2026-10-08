@@ -1,0 +1,16 @@
+{% extends "base.html" %}{% load i18n %}
+{% block title %}{% trans "Xodim" %}{% endblock %}
+{% block content %}
+{% include "hr/_nav.html" %}
+<div class="row g-3">
+  <div class="col-xl-8"><div class="card"><div class="card-header fw-semibold">{% if obj %}{{ obj.full_name }}{% else %}{% trans "Yangi xodim" %}{% endif %}</div><div class="card-body">
+    <form method="post">{% csrf_token %}{{ form.non_field_errors }}
+      <div class="row">{% include "crm/_form_fields.html" %}</div>
+      <button class="btn btn-primary">{% trans "Saqlash" %}</button>
+      <a href="{% url 'hr:employees' %}" class="btn btn-light">{% trans "Bekor qilish" %}</a>
+    </form></div></div></div>
+  {% if obj %}<div class="col-xl-4"><div class="card"><div class="card-header fw-semibold">{% trans "Ta'tillar" %}</div>
+    <ul class="list-group list-group-flush">{% for l in leaves %}<li class="list-group-item"><div class="d-flex justify-content-between"><span>{{ l.get_kind_display }}</span><span class="badge bg-{% if l.status == 'approved' %}success{% elif l.status == 'rejected' %}danger{% else %}warning text-dark{% endif %}">{{ l.get_status_display }}</span></div><div class="small text-muted">{{ l.start_date|date:"d.m.Y" }} – {{ l.end_date|date:"d.m.Y" }} ({{ l.days }} {% trans "kun" %})</div></li>
+    {% empty %}<li class="list-group-item text-muted">—</li>{% endfor %}</ul></div></div>{% endif %}
+</div>
+{% endblock %}

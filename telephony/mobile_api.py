@@ -43,7 +43,7 @@ def login(request):
     user = authenticate(request, username=request.POST.get("username", ""), password=request.POST.get("password", ""))
     if user is None or not user.is_active:
         return JsonResponse({"ok": False, "error": _("Login yoki parol noto'g'ri")}, status=401)
-    if not (user.is_operator or user.is_manager):
+    if not user.can("phone_app"):
         return JsonResponse({"ok": False, "error": _("Ilova faqat operatorlar uchun")}, status=403)
     if not user.api_token:
         user.api_token = secrets.token_urlsafe(32)

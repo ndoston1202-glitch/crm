@@ -20,6 +20,15 @@ msgstr "АТС: отвечено / всего"
 msgid "Administrator"
 msgstr "Администратор"
 
+msgid "Administratorga murojaat qiling."
+msgstr "Обратитесь к администратору."
+
+msgid "Analitika"
+msgstr "Аналитика"
+
+msgid "Analitika va hisobotlar"
+msgstr "Аналитика и отчёты"
+
 msgid "Android"
 msgstr "Android"
 
@@ -41,8 +50,14 @@ msgstr "Выполняется"
 msgid "Band"
 msgstr "Занято"
 
+msgid "Barcha bo'limlar va barcha ma'lumotlar, boshqalarga ruxsat berish ham."
+msgstr "Все разделы и все данные, включая выдачу прав другим."
+
 msgid "Barcha holatlar"
 msgstr "Все статусы"
+
+msgid "Barcha ma'lumotlar"
+msgstr "Все данные"
 
 msgid "Barcha manbalar"
 msgstr "Все источники"
@@ -71,10 +86,24 @@ msgstr "Не назначен"
 msgid "Biriktirilmagan lidlar"
 msgstr "Неназначенные лиды"
 
+msgid "Bo'lim"
+msgstr "Отдел"
+
+msgid "Bo'limlar"
+msgstr "Отделы"
+
 msgid "Bo'sh"
 msgstr "Пусто"
 
+msgid "Bog'lansa, xodim CRM orqali «Keldim/Ketdim» bosadi va ta'til so'raydi"
+msgstr ""
+"Если привязать, сотрудник отмечает «Пришёл/Ушёл» и запрашивает отпуск через "
+"CRM"
+
 msgid "Boshlangan"
+msgstr "Начало"
+
+msgid "Boshlanishi"
 msgstr "Начало"
 
 msgid "Boshqa"
@@ -83,17 +112,47 @@ msgstr "Другое"
 msgid "Boshqa izohlar"
 msgstr "Прочие комментарии"
 
+msgid "Bu oy hali sotuv yo'q"
+msgstr "В этом месяце продаж пока нет"
+
 msgid "Bu raqam bilan lidlar mavjud:"
 msgstr "Лиды с этим номером уже есть:"
 
+msgid "Bugun"
+msgstr "Сегодня"
+
+msgid "Bugun kelgan"
+msgstr "Пришли сегодня"
+
+msgid "Bugun o'tkazib yuborilgan qo'ng'iroqlar"
+msgstr "Пропущенные звонки сегодня"
+
 msgid "Bugun qo'ng'iroq qilish kerak"
 msgstr "Позвонить сегодня"
+
+msgid "Bugun qo'ng'iroqlar"
+msgstr "Звонки сегодня"
+
+msgid "Bugun sotuvlar"
+msgstr "Продажи сегодня"
+
+msgid "Bugun tushum"
+msgstr "Выручка сегодня"
+
+msgid "Bugun yangi lidlar"
+msgstr "Новые лиды сегодня"
+
+msgid "Bugungi davomat"
+msgstr "Посещаемость сегодня"
 
 msgid "Bugungi qo'ng'iroqlar"
 msgstr "Звонки сегодня"
 
 msgid "Bugungi sotuvlar"
 msgstr "Продажи сегодня"
+
+msgid "Butun kompaniya"
+msgstr "Вся компания"
 
 msgid "Buyurtma"
 msgstr "Заказ"
@@ -104,8 +163,17 @@ msgstr "Заказ обновлён"
 msgid "Buyurtmalar yo'q"
 msgstr "Заказов нет"
 
+msgid "CRM"
+msgstr "CRM"
+
+msgid "CRM foydalanuvchisi"
+msgstr "Пользователь CRM"
+
 msgid "CSV fayl"
 msgstr "CSV файл"
+
+msgid "Cheklangan"
+msgstr "Ограниченный"
 
 msgid "Chiqish"
 msgstr "Выход"
@@ -113,14 +181,38 @@ msgstr "Выход"
 msgid "Chiquvchi"
 msgstr "Исходящий"
 
+msgid "Dashboard"
+msgstr "Дашборд"
+
 msgid "Dastur qayta ishga tushirilmoqda, sahifa o'zi yangilanadi..."
 msgstr "Программа перезапускается, страница обновится сама..."
 
 msgid "Dasturni yangilash"
 msgstr "Обновление программы"
 
+msgid "Davomat"
+msgstr "Посещаемость"
+
+msgid "Davomat saqlandi"
+msgstr "Посещаемость сохранена"
+
+msgid "Davomat va ta'til"
+msgstr "Посещаемость и отпуск"
+
+msgid "Davomatni qo'lda belgilash"
+msgstr "Отметить посещаемость вручную"
+
 msgid "Davomiylik (s)"
 msgstr "Длительность (с)"
+
+msgid "Diqqat talab qiladi"
+msgstr "Требует внимания"
+
+msgid "Dostup"
+msgstr "Доступ"
+
+msgid "Eng yaxshi operatorlar — shu oy"
+msgstr "Лучшие операторы — этот месяц"
 
 msgid "F.I.Sh."
 msgstr "Ф.И.О."
@@ -128,8 +220,20 @@ msgstr "Ф.И.О."
 msgid "Facebook"
 msgstr "Facebook"
 
+msgid "Familiya"
+msgstr "Фамилия"
+
 msgid "Faol"
 msgstr "Активна"
+
+msgid "Faol (tizimga kira oladi)"
+msgstr "Активен (может входить)"
+
+msgid "Faqat o'ziga tegishli"
+msgstr "Только свои"
+
+msgid "Faqat sizning ko'rsatkichlaringiz"
+msgstr "Только ваши показатели"
 
 msgid "Faylni MP3 ga aylantirib bo'lmadi — audio fayl ekanini tekshiring"
 msgstr "Не удалось конвертировать в MP3 — проверьте, что это аудиофайл"
@@ -140,11 +244,29 @@ msgstr "Выберите файл"
 msgid "Formada xatolik bor"
 msgstr "В форме есть ошибки"
 
+msgid "Foydalanuvchi"
+msgstr "Пользователь"
+
+msgid "Foydalanuvchilar"
+msgstr "Пользователи"
+
+msgid "Foydalanuvchilar va ruxsatlar"
+msgstr "Пользователи и права"
+
 msgid "Gaplashildi"
 msgstr "Состоялся разговор"
 
 msgid "Git topilmadi yoki dastur git orqali o'rnatilmagan"
 msgstr "Git не найден или программа установлена не через git"
+
+msgid "HR"
+msgstr "HR"
+
+msgid "HR tomonidan to'g'irlandi: %(u)s"
+msgstr "Исправлено HR: %(u)s"
+
+msgid "HR: xodimlar, davomat, ta'tillar"
+msgstr "HR: сотрудники, посещаемость, отпуска"
 
 msgid "Hali qo'ng'iroq qilinmagan"
 msgstr "Звонков ещё не было"
@@ -201,14 +323,59 @@ msgstr "Импортировать"
 msgid "Instagram"
 msgstr "Instagram"
 
+msgid "Ish boshlanishi"
+msgstr "Начало работы"
+
+msgid "Ish kunlari (yakshanbasiz)"
+msgstr "Рабочие дни (без воскресений)"
+
+msgid "Ish tugashi"
+msgstr "Конец работы"
+
+msgid "Ishdan ketdim"
+msgstr "Ушёл с работы"
+
+msgid "Ishdan ketgan"
+msgstr "Уволен"
+
+msgid "Ishdan ketgan sana"
+msgstr "Дата увольнения"
+
+msgid "Ishga keldim"
+msgstr "Пришёл на работу"
+
+msgid "Ishga kelganingiz belgilandi: %(t)s"
+msgstr "Приход отмечен: %(t)s"
+
+msgid "Ishga kirgan"
+msgstr "Принят"
+
+msgid "Ishga kirgan sana"
+msgstr "Дата приёма"
+
+msgid "Ishlagan soat"
+msgstr "Отработано часов"
+
 msgid "Ishlanmoqda"
 msgstr "В работе"
+
+msgid "Ishlayapti"
+msgstr "Работает"
+
+msgid "Ism"
+msgstr "Имя"
 
 msgid "Ism yoki telefon"
 msgstr "Имя или телефон"
 
+msgid "Ism, telefon yoki lavozim"
+msgstr "Имя, телефон или должность"
+
 msgid "Izoh"
 msgstr "Комментарий"
+
+msgid "Jadval ko'rinishida"
+msgstr "В виде таблицы"
 
 msgid "Jami qo'ng'iroqlar"
 msgstr "Всего звонков"
@@ -234,6 +401,36 @@ msgstr "Текущая версия"
 msgid "Kartani ochish"
 msgstr "Открыть карточку"
 
+msgid "Kasallik"
+msgstr "Больничный"
+
+msgid "Kechikdi"
+msgstr "Опоздал"
+
+msgid "Kechikishlar"
+msgstr "Опоздания"
+
+msgid "Kechikkan"
+msgstr "Опоздали"
+
+msgid "Keldi"
+msgstr "Пришёл"
+
+msgid "Keldim / Ketdim"
+msgstr "Пришёл / Ушёл"
+
+msgid "Kelgan kunlar"
+msgstr "Дней присутствия"
+
+msgid "Kelmagan"
+msgstr "Отсутствует"
+
+msgid "Ketdi"
+msgstr "Ушёл"
+
+msgid "Ketganingiz belgilandi: %(t)s"
+msgstr "Уход отмечен: %(t)s"
+
 msgid "Keyingi qo'ng'iroq"
 msgstr "Следующий звонок"
 
@@ -249,14 +446,32 @@ msgstr "Входящий звонок"
 msgid "Kiruvchi qo'ng'iroqdan avtomatik yaratildi"
 msgstr "Создан автоматически из входящего звонка"
 
+msgid "Ko'rib chiqilmagan ta'til so'rovlari"
+msgstr "Нерассмотренные заявки на отпуск"
+
+msgid "Ko'rib chiqilmoqda"
+msgstr "На рассмотрении"
+
 msgid "Ko'rsatish"
 msgstr "Показать"
 
 msgid "Konversiya"
 msgstr "Конверсия"
 
+msgid "Kunlik tushum"
+msgstr "Выручка по дням"
+
+msgid "Kunlik tushum — 30 kun"
+msgstr "Выручка по дням — 30 дней"
+
+msgid "Kutilayotgan so'rovlar"
+msgstr "Ожидающие заявки"
+
 msgid "Kutubxonalarni yangilash"
 msgstr "Обновление библиотек"
+
+msgid "Lavozim"
+msgstr "Должность"
 
 msgid "Lid"
 msgstr "Лид"
@@ -266,6 +481,9 @@ msgstr "Статус лида"
 
 msgid "Lid import"
 msgstr "Импорт лидов"
+
+msgid "Lid manbalari — shu oy"
+msgstr "Источники лидов — этот месяц"
 
 msgid "Lid qo'shildi"
 msgstr "Лид добавлен"
@@ -279,6 +497,15 @@ msgstr "Статусы лидов"
 msgid "Lidlar topilmadi"
 msgstr "Лиды не найдены"
 
+msgid "Lidlar va sotuvlar kunlar bo'yicha"
+msgstr "Лиды и продажи по дням"
+
+msgid "Lidlar va sotuvlar — oxirgi 30 kun"
+msgstr "Лиды и продажи — последние 30 дней"
+
+msgid "Lidlar, voronka va qo'ng'iroqlar"
+msgstr "Лиды, воронка и звонки"
+
 msgid "Lidlarni CSV fayldan import qilish"
 msgstr "Импорт лидов из CSV файла"
 
@@ -291,8 +518,17 @@ msgstr "Логин"
 msgid "Login yoki parol noto'g'ri"
 msgstr "Неверный логин или пароль"
 
+msgid "Lotin harflari, raqamlar va @ . + - _ belgilari"
+msgstr "Латинские буквы, цифры и символы @ . + - _"
+
+msgid "Ma'lumotlar"
+msgstr "Данные"
+
 msgid "Ma'lumotlar bazasini yangilash"
 msgstr "Обновление базы данных"
+
+msgid "Ma'lumotlar doirasi"
+msgstr "Область данных"
 
 msgid "Manba"
 msgstr "Источник"
@@ -309,6 +545,9 @@ msgstr "Ответственный"
 msgid "Mas'ul xodim"
 msgstr "Ответственный сотрудник"
 
+msgid "Mehnat ta'tili"
+msgstr "Трудовой отпуск"
+
 msgid "Menejer"
 msgstr "Менеджер"
 
@@ -320,6 +559,9 @@ msgstr "Клиент"
 
 msgid "Mijoz raqami"
 msgstr "Номер клиента"
+
+msgid "Modullar"
+msgstr "Модули"
 
 msgid "Muddati o'tgan"
 msgstr "Просрочено"
@@ -342,6 +584,9 @@ msgstr "Название"
 msgid "Noto'g'ri raqam"
 msgstr "Неверный номер"
 
+msgid "O'chirilgan"
+msgstr "Отключён"
+
 msgid "O'rtacha"
 msgstr "Среднее"
 
@@ -360,8 +605,26 @@ msgstr "Пропущенный звонок"
 msgid "O'tkazib yuborilgan qo'ng'iroq: %(name)s"
 msgstr "Пропущенный звонок: %(name)s"
 
+msgid "O'z hisobidan"
+msgstr "За свой счёт"
+
 msgid "O'zbekcha"
 msgstr "Узбекский"
+
+msgid "O'zingizdan foydalanuvchilarni boshqarish huquqini olib qo'ya olmaysiz"
+msgstr "Нельзя снять с себя право управления пользователями"
+
+msgid "O'zingizdan to'liq dostupni olib qo'ya olmaysiz"
+msgstr "Нельзя снять с себя полный доступ"
+
+msgid "O'zingizni o'chira olmaysiz"
+msgstr "Нельзя отключить самого себя"
+
+msgid "Ochiq lidlar holati"
+msgstr "Статусы открытых лидов"
+
+msgid "Ochiq xizmat buyurtmalari"
+msgstr "Открытые заказы на обслуживание"
 
 msgid "Operator"
 msgstr "Оператор"
@@ -386,6 +649,9 @@ msgstr "Запись ещё не загружена"
 
 msgid "Ovoz yozuvi yuklandi"
 msgstr "Запись загружена"
+
+msgid "Oylik maosh"
+msgstr "Оклад"
 
 msgid "Parol"
 msgstr "Пароль"
@@ -450,11 +716,20 @@ msgstr "Роль"
 msgid "Ruscha"
 msgstr "Русский"
 
+msgid "Ruxsat berilgan bo'limlar"
+msgstr "Разрешённые разделы"
+
 msgid "Ruxsatlarni bering: qo'ng'iroqlar jurnali va audio fayllar."
 msgstr "Дайте разрешения: журнал звонков и аудиофайлы."
 
+msgid "Sabab"
+msgstr "Причина"
+
 msgid "Sana"
 msgstr "Дата"
+
+msgid "Sanalar"
+msgstr "Даты"
 
 msgid "Saqlandi"
 msgstr "Сохранено"
@@ -478,6 +753,18 @@ msgid ""
 msgstr ""
 "Перезапустите сервер вручную (закройте окно и снова нажмите значок CRM)."
 
+msgid "Shu oy"
+msgstr "Этот месяц"
+
+msgid "Shu oy davomatim"
+msgstr "Моя посещаемость за месяц"
+
+msgid "Shu oy tug'ilgan kunlar"
+msgstr "Дни рождения в этом месяце"
+
+msgid "Shu oy tushum"
+msgstr "Выручка за месяц"
+
 msgid ""
 "Shundan keyin har bir qo'ng'iroq yozuvi 15 daqiqa ichida CRM ga tushadi, "
 "raqam bo'yicha lidga biriktiriladi va lid kartasida eshitiladi."
@@ -491,8 +778,23 @@ msgstr "У вас последняя версия"
 msgid "Sizga %(n)s ta yangi lid biriktirildi"
 msgstr "Вам назначено новых лидов: %(n)s"
 
+msgid "Sizga hali hech qanday bo'limga ruxsat berilmagan"
+msgstr "Вам пока не выдан доступ ни к одному разделу"
+
 msgid "Sizga yangi lid biriktirildi: %(name)s"
 msgstr "Вам назначен новый лид: %(name)s"
+
+msgid "Sizning profilingiz hali xodim sifatida HR bo'limiga bog'lanmagan."
+msgstr "Ваш профиль ещё не привязан к сотруднику в HR."
+
+msgid "So'rov yuborildi"
+msgstr "Заявка отправлена"
+
+msgid "So'rovlar yo'q"
+msgstr "Заявок нет"
+
+msgid "Soat"
+msgstr "Часы"
 
 msgid "Sotuv"
 msgstr "Продажа"
@@ -524,6 +826,9 @@ msgstr "Оформить продажу"
 msgid "Sozlamalar"
 msgstr "Настройки"
 
+msgid "Sozlamalar (admin panel)"
+msgstr "Настройки (админ-панель)"
+
 msgid "Suhbat matni"
 msgstr "Текст разговора"
 
@@ -533,11 +838,50 @@ msgstr "Время разговоров"
 msgid "Summa"
 msgstr "Сумма"
 
+msgid "Ta'til"
+msgstr "Отпуск"
+
+msgid "Ta'til kunlari"
+msgstr "Дни отпуска"
+
+msgid "Ta'til so'rash"
+msgstr "Запросить отпуск"
+
+msgid "Ta'til so'rovi"
+msgstr "Заявка на отпуск"
+
+msgid "Ta'til so'rovingiz rad etildi"
+msgstr "Ваша заявка на отпуск отклонена"
+
+msgid "Ta'til so'rovingiz tasdiqlandi"
+msgstr "Ваша заявка на отпуск одобрена"
+
+msgid "Ta'til so'rovlari"
+msgstr "Заявки на отпуск"
+
+msgid "Ta'til so'rovlarim"
+msgstr "Мои заявки на отпуск"
+
+msgid "Ta'tilda"
+msgstr "В отпуске"
+
+msgid "Ta'tillar"
+msgstr "Отпуска"
+
 msgid "Tahrirlash"
 msgstr "Редактировать"
 
+msgid "Tahrirlashda bo'sh qoldirilsa, parol o'zgarmaydi"
+msgstr "Если оставить пустым, пароль не изменится"
+
 msgid "Tarjimalarni yangilash"
 msgstr "Обновление переводов"
+
+msgid "Tasdiqlandi"
+msgstr "Одобрено"
+
+msgid "Tasdiqlash"
+msgstr "Одобрить"
 
 msgid "Tavsiya"
 msgstr "Рекомендация"
@@ -582,6 +926,27 @@ msgstr "Telegram"
 
 msgid "Til"
 msgstr "Язык"
+
+msgid "To'liq dostup"
+msgstr "Полный доступ"
+
+msgid ""
+"To'liq dostupli foydalanuvchini faqat to'liq dostupli admin o'zgartira oladi"
+msgstr ""
+"Пользователя с полным доступом может изменить только администратор с полным "
+"доступом"
+
+msgid "Tug'ilgan sana"
+msgstr "Дата рождения"
+
+msgid "Tugash sanasi boshlanishidan oldin bo'lishi mumkin emas"
+msgstr "Дата окончания не может быть раньше даты начала"
+
+msgid "Tugashi"
+msgstr "Окончание"
+
+msgid "Turi"
+msgstr "Тип"
 
 msgid "Tushum"
 msgstr "Выручка"
@@ -629,8 +994,23 @@ msgstr "Сотрудник сервиса"
 msgid "Xizmatlar"
 msgstr "Услуги"
 
+msgid "Xodim"
+msgstr "Сотрудник"
+
+msgid "Xodimlar"
+msgstr "Сотрудники"
+
+msgid "Xodimlar qo'shilmagan"
+msgstr "Сотрудники не добавлены"
+
+msgid "Xodimlar topilmadi"
+msgstr "Сотрудники не найдены"
+
 msgid "Yangi"
 msgstr "Новый"
+
+msgid "Yangi foydalanuvchi"
+msgstr "Новый пользователь"
 
 msgid "Yangi lid"
 msgstr "Новый лид"
@@ -641,6 +1021,9 @@ msgstr "Новые лиды"
 msgid "Yangi o'zgarishlar"
 msgstr "Новые изменения"
 
+msgid "Yangi ta'til so'rovi: %(n)s"
+msgstr "Новая заявка на отпуск: %(n)s"
+
 msgid "Yangi versiya mavjud (%(n)s ta o'zgarish)"
 msgstr "Доступна новая версия (изменений: %(n)s)"
 
@@ -649,6 +1032,9 @@ msgstr "Загрузка новой версии"
 
 msgid "Yangi xizmat buyurtmasi #%(n)s"
 msgstr "Новый заказ на обслуживание #%(n)s"
+
+msgid "Yangi xodim"
+msgstr "Новый сотрудник"
 
 msgid "Yangilanish"
 msgstr "Обновление"
@@ -684,14 +1070,23 @@ msgstr "Создан"
 msgid "Yo'nalish"
 msgstr "Направление"
 
+msgid "Yoki yangi bo'lim"
+msgstr "Или новый отдел"
+
 msgid "Yozuvni qo'lda yuklash (iPhone va boshqalar):"
 msgstr "Загрузить запись вручную (iPhone и др.):"
+
+msgid "Yuborish"
+msgstr "Отправить"
 
 msgid "Yuklab olish"
 msgstr "Скачать"
 
 msgid "Yuklash"
 msgstr "Загрузить"
+
+msgid "daq."
+msgstr "мин."
 
 msgid ""
 "iPhone qo'ng'iroq yozuvlarini boshqa ilovalarga bermaydi, shuning uchun "
@@ -701,3 +1096,28 @@ msgstr ""
 "iPhone не даёт другим приложениям доступ к записям звонков, поэтому "
 "автозагрузка невозможна. Загрузите запись через «Загрузить запись вручную» в"
 " карточке лида."
+
+msgid "kecha"
+msgstr "вчера"
+
+msgid "kun"
+msgstr "дн."
+
+msgid "lid"
+msgstr "лидов"
+
+msgid "qo'shish"
+msgstr "добавить"
+
+msgid "sotuv"
+msgstr "продаж"
+
+msgid "to'liq dostup"
+msgstr "полный доступ"
+
+msgid ""
+"«Faqat o'ziga tegishli» — operator faqat o'z lidlarini, servis xodimi faqat "
+"o'z buyurtmalarini ko'radi."
+msgstr ""
+"«Только свои» — оператор видит только свои лиды, сотрудник сервиса — только "
+"свои заказы."

@@ -1,0 +1,61 @@
+{% extends "base.html" %}{% load i18n %}
+{% block title %}{% trans "Foydalanuvchi" %}{% endblock %}
+{% block content %}
+<h3 class="mb-3">{% if obj %}{{ obj.get_full_name|default:obj.username }}{% else %}{% trans "Yangi foydalanuvchi" %}{% endif %}</h3>
+<form method="post" autocomplete="off">{% csrf_token %}
+{% if form.non_field_errors %}<div class="alert alert-danger">{{ form.non_field_errors }}</div>{% endif %}
+<div class="row g-3" style="max-width:1100px">
+  <div class="col-lg-6"><div class="card h-100"><div class="card-header fw-semibold">{% trans "Ma'lumotlar" %}</div><div class="card-body"><div class="row">
+    {% for field in form %}{% if field.name in "first_name,last_name,username,password,role,phone,sip_extension" %}
+    <div class="col-md-6 mb-3">
+      <label class="form-label" for="{{ field.id_for_label }}">{{ field.label }}</label>{{ field }}
+      {% if field.help_text %}<div class="form-text">{{ field.help_text }}</div>{% endif %}
+      {% for e in field.errors %}<div class="text-danger small">{{ e }}</div>{% endfor %}
+    </div>{% endif %}{% endfor %}
+    <div class="col-12 form-check form-switch ms-2">{{ form.is_active }} <label class="form-check-label" for="{{ form.is_active.id_for_label }}">{% trans "Faol (tizimga kira oladi)" %}</label></div>
+  </div></div></div></div>
+
+  <div class="col-lg-6"><div class="card h-100"><div class="card-header fw-semibold"><i class="bi bi-shield-lock"></i> {% trans "Dostup" %}</div><div class="card-body">
+    <div class="form-check form-switch mb-3 py-3 pe-3 border rounded bg-light" style="padding-left:3.5rem">
+      {{ form.full_access }}
+      <label class="form-check-label fw-semibold" for="{{ form.full_access.id_for_label }}">{% trans "To'liq dostup" %}</label>
+      <div class="form-text">{% trans "Barcha bo'limlar va barcha ma'lumotlar, boshqalarga ruxsat berish ham." %}</div>
+    </div>
+    <div id="limited">
+      <div class="mb-3"><div class="form-label fw-semibold">{% trans "Ruxsat berilgan bo'limlar" %}</div>
+        <div class="row">{% for cb in form.modules %}<div class="col-sm-6"><div class="form-check">{{ cb.tag }} <label class="form-check-label" for="{{ cb.id_for_label }}">{{ cb.choice_label }}</label></div></div>{% endfor %}</div>
+      </div>
+      <div><div class="form-label fw-semibold">{% trans "Ma'lumotlar doirasi" %}</div>
+        {% for rb in form.data_scope %}<div class="form-check">{{ rb.tag }} <label class="form-check-label" for="{{ rb.id_for_label }}">{{ rb.choice_label }}</label></div>{% endfor %}
+        <div class="form-text">{% trans "«Faqat o'ziga tegishli» — operator faqat o'z lidlarini, servis xodimi faqat o'z buyurtmalarini ko'radi." %}</div>
+      </div>
+    </div>
+  </div></div></div>
+</div>
+<div class="mt-3">
+  <button class="btn btn-primary"><i class="bi bi-check-lg"></i> {% trans "Saqlash" %}</button>
+  <a href="{% url 'accounts:user_list' %}" class="btn btn-light">{% trans "Bekor qilish" %}</a>
+</div>
+</form>
+{{ role_defaults|json_script:"role-defaults" }}
+{% endblock %}
+{% block scripts %}
+<script>
+const defaults = JSON.parse(document.getElementById('role-defaults').textContent);
+const full = document.getElementById('{{ form.full_access.id_for_label }}');
+const limited = document.getElementById('limited');
+function sync() { limited.style.opacity = full.checked ? .4 : 1; limited.querySelectorAll('input').forEach(i => i.disabled = full.checked); }
+full.addEventListener('change', sync); sync();
+{% if not obj %}
+// Yangi foydalanuvchi: rol tanlanganda standart ruxsatlarni belgilaymiz
+document.getElementById('{{ form.role.id_for_label }}').addEventListener('change', e => {
+  const d = defaults[e.target.value]; if (!d) return;
+  if (!full.disabled) full.checked = d.full_access;
+  document.querySelectorAll('input[name=modules]').forEach(cb => cb.checked = d.modules.includes(cb.value));
+  document.querySelectorAll('input[name=data_scope]').forEach(rb => rb.checked = rb.value === d.data_scope);
+  sync();
+});
+document.getElementById('{{ form.role.id_for_label }}').dispatchEvent(new Event('change'));
+{% endif %}
+</script>
+{% endblock %}

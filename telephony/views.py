@@ -5,6 +5,7 @@ from datetime import timedelta
 from django.conf import settings
 from django.contrib.auth import get_user_model
 from django.contrib.auth.decorators import login_required
+from django.core.exceptions import PermissionDenied
 from django.http import FileResponse, Http404, HttpResponseForbidden, JsonResponse
 from django.shortcuts import get_object_or_404
 from django.urls import reverse
@@ -156,7 +157,7 @@ def webhook(request):
 def poll(request):
     """Brauzer har bir necha soniyada so'raydi: operatorga hozir jiringlayotgan kiruvchi qo'ng'iroqlar."""
     user = request.user
-    if not (user.is_operator or user.is_manager) or not user.sip_extension:
+    if not user.can("leads") or not user.sip_extension:
         return JsonResponse({"calls": []})
     since = timezone.now() - timedelta(seconds=90)
     calls = (
@@ -264,6 +265,8 @@ APK_URL = "https://github.com/ndoston1202-glitch/crm/releases/download/android-l
 
 @login_required
 def mobile_app(request):
+    if not request.user.can("phone_app"):
+        raise PermissionDenied
     from django.shortcuts import render
 
     server_url = request.build_absolute_uri("/").rstrip("/")
