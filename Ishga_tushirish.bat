@@ -1,30 +1,31 @@
 @echo off
 chcp 65001 >nul
-title CRM server
+title CRM
 cd /d "%~dp0"
+rem Terminal oynasi ko'rinmasligi uchun: oddiy ochilgan bo'lsa, o'zini yashirin rejimda qayta ishga tushiradi
+if not "%CRM_HIDDEN%"=="1" (
+  start "" wscript.exe "%~dp0tools\windows\crm.vbs"
+  exit
+)
 set "PY=.venv\Scripts\python.exe"
 if not exist "%PY%" (
-  echo Avval Ornatish.bat ni ishga tushiring.
-  pause
+  mshta "javascript:alert('Avval Ornatish.bat ni ishga tushiring.');close()"
   exit /b 1
 )
-set PORT=8000
+set "CHECK=import socket,sys; sys.exit(0 if socket.socket().connect_ex(('127.0.0.1',8000))==0 else 1)"
 
-rem Server allaqachon ishlayotgan bo'lsa, faqat brauzerni ochamiz
-"%PY%" -c "import socket,sys; sys.exit(0 if socket.socket().connect_ex(('127.0.0.1',%PORT%))==0 else 1)"
-if %errorlevel%==0 (
-  start "" http://localhost:%PORT%/
-  exit /b 0
+rem Server ishlamayotgan bo'lsa - fonda ishga tushiramiz va tayyor bo'lishini kutamiz
+"%PY%" -c "%CHECK%"
+if %errorlevel%==0 goto open
+start "" /b cmd /c "tools\windows\server.bat"
+for /l %%i in (1,1,40) do (
+  timeout /t 1 /nobreak >nul
+  "%PY%" -c "%CHECK%" && goto open
 )
+rem Yashirin rejimda xabar oynasi orqali bildiramiz
+mshta "javascript:alert('CRM serveri ishga tushmadi. Sababi: logs\\server.log');close()"
+exit /b 1
 
-start "" /b cmd /c "timeout /t 4 >nul & start http://localhost:%PORT%/"
-set CRM_LAUNCHER=1
-:loop
-"%PY%" manage.py runserver 0.0.0.0:%PORT% --noreload
-rem Chiqish kodi 3 = dastur ichidan yangilandi, qayta ishga tushiramiz
-if %errorlevel%==3 (
-  echo Yangilanish o'rnatildi, qayta ishga tushirilmoqda...
-  goto loop
-)
-echo Server to'xtadi.
-pause
+:open
+call tools\windows\open_app.bat http://localhost:8000/
+exit /b 0

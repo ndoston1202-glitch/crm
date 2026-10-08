@@ -8,7 +8,10 @@
   <link href="{% static 'vendor/bootstrap/bootstrap.min.css' %}" rel="stylesheet">
   <link href="{% static 'vendor/bootstrap-icons/bootstrap-icons.min.css' %}" rel="stylesheet">
   <link href="{% static 'css/crm.css' %}" rel="stylesheet">
+  <link rel="icon" href="{% static 'img/icon-192.png' %}" type="image/png" sizes="192x192">
   <link rel="icon" href="{% static 'img/logo.svg' %}" type="image/svg+xml">
+  <link rel="manifest" href="{% static 'manifest.json' %}">
+  <meta name="theme-color" content="#1f2d3d">
 </head>
 <body>
 {% if user.is_authenticated %}
