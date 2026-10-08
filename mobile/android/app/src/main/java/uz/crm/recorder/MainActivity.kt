@@ -173,6 +173,7 @@ class MainActivity : Activity() {
             text("Muhim", 15f, bold = true),
             text("1. Telefon sozlamalarida qo'ng'iroqlarni avtomatik yozish yoqilgan bo'lsin (Telefon → Sozlamalar → Qo'ng'iroqlarni yozish).", 13f),
             text("2. Xiaomi, Huawei, Oppo va boshqalarda ilovaga batareya cheklovini o'chiring, aks holda fonda ishlamaydi.", 13f),
+            text("3. Google «Telefon» ilovasi yozuvlarni boshqa ilovalarga bermaydi. U holda: qo'ng'iroqlar tarixi → qo'ng'iroq → yozuv → «Ulashish» → «CRM ga yuklash» → qo'ng'iroqni tanlang.", 13f),
         ))
         root.addView(button("Batareya sozlamalari", primary = false) {
             try {
