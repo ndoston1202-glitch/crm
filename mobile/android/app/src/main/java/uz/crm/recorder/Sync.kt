@@ -42,7 +42,7 @@ object Sync {
         var failed = 0
         for (rec in result.ready) {
             try {
-                Api.upload(prefs.server, prefs.token, context.contentResolver, rec)
+                Api.upload(prefs.server, prefs.token, context.contentResolver, rec, context.cacheDir)
                 prefs.markDone(rec.clientId)
                 prefs.uploadedCount = prefs.uploadedCount + 1
                 ok++
@@ -58,7 +58,7 @@ object Sync {
                 prefs.addLog("$time  ✗ ${rec.phone}: ${e.message}")
             } catch (e: Exception) {
                 failed++
-                prefs.addLog("$time  ✗ ${rec.phone}: tarmoq xatosi")
+                prefs.addLog("$time  ✗ ${rec.phone}: ${e.javaClass.simpleName} ${e.message ?: ""}".take(160))
                 break // internet yo'q — keyingi safar
             }
         }
