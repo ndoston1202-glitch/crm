@@ -41,8 +41,29 @@ if (-not (Test-Path ".git")) {
 }
 
 Step "FFmpeg tekshirilmoqda (ovoz yozuvlarini MP3 ga aylantirish uchun)"
-if (-not (Has "ffmpeg")) {
-    try { WingetInstall "Gyan.FFmpeg" "FFmpeg" } catch { Write-Warning "FFmpeg o'rnatilmadi - yozuvlar MP3 ga aylantirilmaydi. Keyinroq qo'lda o'rnating." }
+$LocalFfmpeg = Join-Path $Root "tools\ffmpeg\bin\ffmpeg.exe"
+if (-not (Has "ffmpeg") -and -not (Test-Path $LocalFfmpeg)) {
+    try { WingetInstall "Gyan.FFmpeg.Essentials" "FFmpeg" } catch { }
+    if (-not (Has "ffmpeg")) {
+        # winget ishlamadi (masalan "Access is denied") - CRM papkasining o'ziga yuklab olamiz
+        Write-Host "FFmpeg to'g'ridan-to'g'ri yuklab olinmoqda (~30 MB)..."
+        try {
+            $zip = Join-Path $env:TEMP "crm-ffmpeg.zip"
+            $tmp = Join-Path $env:TEMP "crm-ffmpeg"
+            [Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12
+            $ProgressPreference = "SilentlyContinue"
+            Invoke-WebRequest "https://www.gyan.dev/ffmpeg/builds/ffmpeg-release-essentials.zip" -OutFile $zip -UseBasicParsing
+            if (Test-Path $tmp) { Remove-Item $tmp -Recurse -Force }
+            Expand-Archive $zip -DestinationPath $tmp -Force
+            $exe = Get-ChildItem $tmp -Recurse -Filter "ffmpeg.exe" | Select-Object -First 1
+            New-Item -ItemType Directory -Force -Path (Split-Path $LocalFfmpeg) | Out-Null
+            Copy-Item $exe.FullName $LocalFfmpeg -Force
+            Remove-Item $zip, $tmp -Recurse -Force -ErrorAction SilentlyContinue
+            Write-Host "FFmpeg o'rnatildi: $LocalFfmpeg" -ForegroundColor Green
+        } catch {
+            Write-Warning "FFmpeg o'rnatilmadi - ovoz yozuvlari MP3 ga aylantirilmaydi. Internetni tekshirib Ornatish.bat ni qayta ishga tushiring."
+        }
+    }
 }
 
 Step "Virtual muhit va kutubxonalar"
@@ -72,8 +93,22 @@ Step "Ma'lumotlar bazasi"
 Step "Administrator"
 $hasAdmin = & $VPy manage.py shell -c "from accounts.models import User; print(User.objects.filter(is_superuser=True).exists())"
 if ($hasAdmin -notmatch "True") {
-    $pwd1 = Read-Host "admin foydalanuvchisi uchun parol kiriting"
-    & $VPy manage.py ensure_admin --username admin --password $pwd1
+    # Uzoq yuklash paytida bosilgan tugmalar parol bo'lib ketmasligi uchun klaviatura buferini tozalaymiz
+    try { while ([Console]::KeyAvailable) { [void][Console]::ReadKey($true) } } catch { }
+    while ($true) {
+        $p1 = Read-Host "admin uchun parol kiriting (kamida 6 belgi)" -AsSecureString
+        $p2 = Read-Host "Parolni qayta kiriting" -AsSecureString
+        $plain1 = [Runtime.InteropServices.Marshal]::PtrToStringAuto([Runtime.InteropServices.Marshal]::SecureStringToBSTR($p1))
+        $plain2 = [Runtime.InteropServices.Marshal]::PtrToStringAuto([Runtime.InteropServices.Marshal]::SecureStringToBSTR($p2))
+        if ($plain1.Length -lt 6) { Write-Warning "Parol juda qisqa, qaytadan kiriting."; continue }
+        if ($plain1 -ne $plain2) { Write-Warning "Parollar mos kelmadi, qaytadan kiriting."; continue }
+        break
+    }
+    # Parol buyruq qatorida ko'rinmasligi uchun muhit o'zgaruvchisi orqali beriladi
+    $env:CRM_ADMIN_PASSWORD = $plain1
+    & $VPy manage.py ensure_admin --username admin
+    Remove-Item Env:CRM_ADMIN_PASSWORD
+    if ($LASTEXITCODE -ne 0) { Write-Warning "Administrator yaratilmadi. Qo'lda: .venv\Scripts\python.exe manage.py ensure_admin --password PAROL" }
 } else { Write-Host "Administrator allaqachon mavjud." }
 
 Step "Ish stolida CRM yorlig'i"
