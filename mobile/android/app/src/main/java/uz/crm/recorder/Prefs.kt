@@ -32,6 +32,29 @@ class Prefs(context: Context) {
         get() = sp.getInt("uploaded_count", 0)
         set(v) = sp.edit().putInt("uploaded_count", v).apply()
 
+    /** Avtomatik yuborish (standart: o'chiq — foydalanuvchi o'zi tanlab yuboradi). */
+    var autoUpload: Boolean
+        get() = sp.getBoolean("auto_upload", false)
+        set(v) = sp.edit().putBoolean("auto_upload", v).apply()
+
+    fun error(id: String): String? = sp.getString("err_$id", null)
+
+    fun setError(id: String, message: String?) {
+        if (message == null) sp.edit().remove("err_$id").apply() else sp.edit().putString("err_$id", message).apply()
+    }
+
+    /** Telefon papkasidagi yozuv uchun qo'lda tanlangan qo'ng'iroq: "raqam|yo'nalish|boshlanish|davomiylik". */
+    fun override(id: String): CallEntry? {
+        val parts = (sp.getString("ovr_$id", null) ?: return null).split("|")
+        if (parts.size != 4) return null
+        return CallEntry(parts[0], if (parts[1] == "out") android.provider.CallLog.Calls.OUTGOING_TYPE else android.provider.CallLog.Calls.INCOMING_TYPE,
+            parts[2].toLong(), parts[3].toLong())
+    }
+
+    fun setOverride(id: String, call: CallEntry) {
+        sp.edit().putString("ovr_$id", "${call.number}|${call.direction}|${call.start}|${call.durationSec}").apply()
+    }
+
     val loggedIn: Boolean get() = token.isNotEmpty() && server.isNotEmpty()
 
     fun isDone(id: String): Boolean = sp.getStringSet("done", emptySet())!!.contains(id)

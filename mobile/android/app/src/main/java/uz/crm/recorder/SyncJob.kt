@@ -7,7 +7,7 @@ class SyncJob : JobService() {
     override fun onStartJob(params: JobParameters): Boolean {
         Thread {
             try {
-                Sync.run(applicationContext)
+                Sync.runAuto(applicationContext)
             } finally {
                 jobFinished(params, false)
             }

@@ -281,4 +281,8 @@ def mobile_app(request):
             server_url = f"http://{ip}:{request.get_port()}"
         except OSError:
             pass
-    return render(request, "telephony/mobile_app.html", {"server_url": server_url, "apk_url": APK_URL})
+    from .mobile_api import _release_info
+
+    info = _release_info()
+    apk_url = reverse("telephony:mobile_app_download") if info else APK_URL
+    return render(request, "telephony/mobile_app.html", {"server_url": server_url, "apk_url": apk_url, "release": info})

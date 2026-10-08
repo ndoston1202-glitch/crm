@@ -100,3 +100,28 @@ class MobileApiTests(TestCase):
         self.client.force_login(self.op)
         resp = self.client.get(reverse("telephony:mobile_app"))
         self.assertContains(resp, "CRM-yozuvlar.apk")
+
+
+class AppReleaseTests(TestCase):
+    def setUp(self):
+        import tempfile
+        from pathlib import Path
+
+        self.tmp = Path(tempfile.mkdtemp())
+        (self.tmp / "version.json").write_text('{"versionCode": 7, "versionName": "1.0.7"}')
+        (self.tmp / "CRM-yozuvlar.apk").write_bytes(b"PK-apk")
+        patcher = __import__("unittest").mock.patch("telephony.mobile_api.RELEASE_DIR", self.tmp)
+        patcher.start()
+        self.addCleanup(patcher.stop)
+        self.op = User.objects.create_user("op", password="pass12345", role=User.Role.OPERATOR)
+        self.token = self.client.post(reverse("telephony:mobile_login"), {"username": "op", "password": "pass12345"}).json()["token"]
+
+    def test_version_and_download(self):
+        h = {"HTTP_AUTHORIZATION": "Token " + self.token}
+        self.assertEqual(self.client.get(reverse("telephony:mobile_app_version"), **h).json()["versionCode"], 7)
+        resp = self.client.get(reverse("telephony:mobile_app_download"), **h)
+        self.assertEqual(b"".join(resp.streaming_content), b"PK-apk")
+        self.assertEqual(self.client.get(reverse("telephony:mobile_app_download")).status_code, 302)
+        self.client.force_login(self.op)
+        self.assertEqual(self.client.get(reverse("telephony:mobile_app_download")).status_code, 200)
+        self.assertContains(self.client.get(reverse("telephony:mobile_app")), "1.0.7")

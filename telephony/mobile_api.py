@@ -5,6 +5,7 @@ from datetime import datetime, timedelta
 from datetime import timezone as dt_timezone
 from functools import wraps
 
+from django.conf import settings
 from django.contrib.auth import authenticate, get_user_model
 from django.db import IntegrityError
 from django.http import JsonResponse
@@ -131,3 +132,47 @@ def upload(request):
         call.delete()
         return JsonResponse({"ok": False, "error": f"mp3 conversion failed: {exc}"}, status=500)
     return JsonResponse({"ok": True, "call_id": call.pk, "lead_id": lead.pk})
+
+
+# ---------- Ilovaning o'zini yangilashi ----------
+RELEASE_DIR = settings.BASE_DIR / "mobile" / "release"
+
+
+def _release_info():
+    import json
+
+    try:
+        info = json.loads((RELEASE_DIR / "version.json").read_text(encoding="utf-8"))
+    except (OSError, ValueError):
+        return None
+    if not (RELEASE_DIR / "CRM-yozuvlar.apk").is_file():
+        return None
+    return info
+
+
+@token_required
+def app_version(request):
+    info = _release_info()
+    if info is None:
+        return JsonResponse({"ok": False, "error": "no release"}, status=404)
+    return JsonResponse({"ok": True, **info})
+
+
+def app_download(request):
+    """APK: telefon ilovasi (token) yoki CRM'ga kirgan foydalanuvchi (brauzer) yuklab oladi."""
+    from django.http import FileResponse, Http404
+
+    header = request.headers.get("Authorization", "")
+    token = header[6:].strip() if header.startswith("Token ") else ""
+    allowed = (token and User.objects.filter(api_token=token, is_active=True).exists()) or (
+        request.user.is_authenticated
+    )
+    if not allowed:
+        from django.contrib.auth.views import redirect_to_login
+
+        return redirect_to_login(request.get_full_path())
+    apk = RELEASE_DIR / "CRM-yozuvlar.apk"
+    if not apk.is_file():
+        raise Http404
+    return FileResponse(open(apk, "rb"), as_attachment=True, filename="CRM-yozuvlar.apk",
+                        content_type="application/vnd.android.package-archive")

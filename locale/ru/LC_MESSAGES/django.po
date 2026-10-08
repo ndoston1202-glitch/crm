@@ -896,6 +896,13 @@ msgstr ""
 "Телефон должен быть в одной сети (Wi-Fi) с сервером CRM, либо сервер должен "
 "быть доступен из интернета."
 
+msgid ""
+"Telefon brauzerida CRM ga kirib, shu tugmani bosing. Keyingi "
+"yangilanishlarni ilovaning o'zi taklif qiladi."
+msgstr ""
+"Откройте CRM в браузере телефона и нажмите эту кнопку. Следующие обновления "
+"приложение предложит само."
+
 msgid "Telefon ilovasi"
 msgstr "Мобильное приложение"
 
@@ -1114,6 +1121,9 @@ msgstr "продаж"
 
 msgid "to'liq dostup"
 msgstr "полный доступ"
+
+msgid "versiya"
+msgstr "версия"
 
 msgid ""
 "«Faqat o'ziga tegishli» — operator faqat o'z lidlarini, servis xodimi faqat "
