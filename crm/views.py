@@ -16,6 +16,9 @@ from django.utils.dateparse import parse_date
 from django.utils.translation import gettext as _
 from django.views.decorators.http import require_POST
 
+from telephony.stats import call_stats, fmt_seconds
+from telephony.utils import normalize_phone
+
 from .forms import CallForm, LeadForm, LeadImportForm, SaleForm, ServiceOrderForm
 from .models import Call, Lead, Sale, ServiceOrder
 
@@ -163,7 +166,8 @@ def lead_detail(request, pk):
         "crm/lead_detail.html",
         {
             "lead": lead,
-            "calls": lead.calls.select_related("operator"),
+            "calls": lead.calls.filter(phone_call__isnull=True).select_related("operator"),
+            "phone_calls": lead.phone_calls.select_related("operator").prefetch_related("notes"),
             "sales": lead.sales.select_related("service", "operator", "order__assignee"),
             "call_form": CallForm(initial={"new_status": lead.status}),
             "sale_form": SaleForm(),
@@ -194,6 +198,12 @@ def call_add(request, pk):
         call = form.save(commit=False)
         call.lead = lead
         call.operator = request.user
+        # Izohni shu operatorning ushbu lid bilan oxirgi ATS qo'ng'irog'iga bog'laymiz
+        call.phone_call = (
+            lead.phone_calls.filter(operator=request.user, notes__isnull=True, started_at__gte=timezone.now() - timedelta(hours=2))
+            .order_by("-started_at")
+            .first()
+        )
         call.save()
         new_status = form.cleaned_data["new_status"]
         if new_status == Lead.Status.WON and not lead.sales.exists():
@@ -260,6 +270,7 @@ def lead_import(request):
                 Lead(
                     full_name=row.get("full_name") or row["phone"],
                     phone=row["phone"],
+                    phone_norm=normalize_phone(row["phone"]),
                     region=row.get("region", ""),
                     comment=row.get("comment", ""),
                     source=source if source in Lead.Source.values else Lead.Source.OTHER,
@@ -325,6 +336,9 @@ def reports(request):
     lead_counts = dict(leads.values_list("operator").annotate(n=Count("id")))
     call_counts = dict(calls.values_list("operator").annotate(n=Count("id")))
     sale_rows = {r["operator"]: r for r in sales.values("operator").annotate(n=Count("id"), s=Sum("amount"))}
+    phone_totals, phone_by_op = call_stats(date_from, date_to)
+    phone_totals["talk"] = fmt_seconds(phone_totals["talk"])
+    phone_totals["avg"] = fmt_seconds(phone_totals["avg"])
     operators = []
     for op in User.objects.filter(role=User.Role.OPERATOR, is_active=True):
         n_leads = lead_counts.get(op.pk, 0)
@@ -338,6 +352,13 @@ def reports(request):
                 "sales": n_sales,
                 "revenue": sale.get("s") or 0,
                 "conversion": round(100 * n_sales / n_leads, 1) if n_leads else 0,
+                "phone": {
+                    "total": phone_by_op.get(op.pk, {}).get("total", 0),
+                    "answered": phone_by_op.get(op.pk, {}).get("answered", 0),
+                    "missed": phone_by_op.get(op.pk, {}).get("missed", 0),
+                    "talk": fmt_seconds(phone_by_op.get(op.pk, {}).get("talk")),
+                    "avg": fmt_seconds(phone_by_op.get(op.pk, {}).get("avg")),
+                },
             }
         )
     operators.sort(key=lambda r: r["revenue"], reverse=True)
@@ -361,6 +382,7 @@ def reports(request):
             "revenue": revenue,
             "conversion": round(100 * total_sales / total_leads, 1) if total_leads else 0,
             "funnel": funnel,
+            "phone": phone_totals,
             "operators": operators,
             "by_source": by_source,
             "orders": [{"label": label, "n": order_status.get(v, 0)} for v, label in ServiceOrder.Status.choices],

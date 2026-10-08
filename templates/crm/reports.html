@@ -17,15 +17,26 @@
   <div class="col-6 col-md"><div class="card stat-card"><div class="card-body"><div class="text-muted">{% trans "Tushum" %}</div><div class="value">{{ revenue|floatformat:"0g" }}</div></div></div></div>
   <div class="col-6 col-md"><div class="card stat-card"><div class="card-body"><div class="text-muted">{% trans "Biriktirilmagan lidlar" %}</div><div class="value text-danger"><a href="{% url 'crm:lead_list' %}?operator=none" class="text-reset">{{ unassigned }}</a></div></div></div></div>
 </div>
+<div class="card mb-4"><div class="card-header fw-semibold"><i class="bi bi-telephone"></i> {% trans "IP-telefoniya" %}</div>
+  <div class="card-body"><div class="row text-center g-2">
+    <div class="col-6 col-md"><div class="text-muted small">{% trans "Jami qo'ng'iroqlar" %}</div><div class="fs-4 fw-semibold">{{ phone.total }}</div></div>
+    <div class="col-6 col-md"><div class="text-muted small">{% trans "Kiruvchi" %}</div><div class="fs-4 fw-semibold">{{ phone.incoming }}</div></div>
+    <div class="col-6 col-md"><div class="text-muted small">{% trans "Chiquvchi" %}</div><div class="fs-4 fw-semibold">{{ phone.outgoing }}</div></div>
+    <div class="col-6 col-md"><div class="text-muted small">{% trans "Javob berildi" %}</div><div class="fs-4 fw-semibold text-success">{{ phone.answered }}</div></div>
+    <div class="col-6 col-md"><div class="text-muted small">{% trans "O'tkazib yuborilgan kiruvchi" %}</div><div class="fs-4 fw-semibold text-danger">{{ phone.missed }}</div></div>
+    <div class="col-6 col-md"><div class="text-muted small">{% trans "Suhbat vaqti" %}</div><div class="fs-4 fw-semibold">{{ phone.talk }}</div></div>
+    <div class="col-6 col-md"><div class="text-muted small">{% trans "O'rtacha suhbat" %}</div><div class="fs-4 fw-semibold">{{ phone.avg }}</div></div>
+  </div></div>
+</div>
 <div class="row g-3">
-  <div class="col-lg-8"><div class="card"><div class="card-header fw-semibold">{% trans "Operatorlar samaradorligi" %}</div>
+  <div class="col-12 col-xl-8"><div class="card"><div class="card-header fw-semibold">{% trans "Operatorlar samaradorligi" %}</div>
     <div class="table-responsive"><table class="table mb-0 align-middle">
-      <thead><tr><th>{% trans "Operator" %}</th><th>{% trans "Lidlar" %}</th><th>{% trans "Qo'ng'iroqlar" %}</th><th>{% trans "Sotuvlar" %}</th><th>{% trans "Konversiya" %}</th><th>{% trans "Tushum" %}</th></tr></thead>
-      <tbody>{% for r in operators %}<tr><td>{{ r.user }}</td><td>{{ r.leads }}</td><td>{{ r.calls }}</td><td>{{ r.sales }}</td><td>{{ r.conversion }}%</td><td>{{ r.revenue|floatformat:"0g" }}</td></tr>
-      {% empty %}<tr><td colspan="6" class="text-muted text-center">{% trans "Operatorlar yo'q" %}</td></tr>{% endfor %}</tbody>
+      <thead><tr><th>{% trans "Operator" %}</th><th>{% trans "Lidlar" %}</th><th>{% trans "Qo'ng'iroqlar" %}</th><th>{% trans "Sotuvlar" %}</th><th>{% trans "Konversiya" %}</th><th>{% trans "Tushum" %}</th><th>{% trans "ATS: javob / jami" %}</th><th>{% trans "O'tkazib yuborilgan" %}</th><th>{% trans "Suhbat vaqti" %}</th><th>{% trans "O'rtacha" %}</th></tr></thead>
+      <tbody>{% for r in operators %}<tr><td>{{ r.user }}</td><td>{{ r.leads }}</td><td>{{ r.calls }}</td><td>{{ r.sales }}</td><td>{{ r.conversion }}%</td><td>{{ r.revenue|floatformat:"0g" }}</td><td>{{ r.phone.answered }} / {{ r.phone.total }}</td><td class="text-danger">{{ r.phone.missed }}</td><td>{{ r.phone.talk }}</td><td>{{ r.phone.avg }}</td></tr>
+      {% empty %}<tr><td colspan="10" class="text-muted text-center">{% trans "Operatorlar yo'q" %}</td></tr>{% endfor %}</tbody>
     </table></div>
   </div></div>
-  <div class="col-lg-4">
+  <div class="col-12 col-xl-4">
     <div class="card mb-3"><div class="card-header fw-semibold">{% trans "Lidlar holati" %}</div><div class="card-body">
       {% for f in funnel %}<div class="mb-2"><div class="d-flex justify-content-between small"><span>{{ f.label }}</span><span>{{ f.count }} ({{ f.pct }}%)</span></div>
       <div class="progress" style="height:8px"><div class="progress-bar" style="width:{{ f.pct }}%"></div></div></div>{% endfor %}

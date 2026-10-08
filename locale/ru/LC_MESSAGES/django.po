@@ -5,8 +5,20 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Plural-Forms: nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2);\n"
 
+msgid "ATS orqali qo'ng'iroqlar yo'q"
+msgstr "Звонков через АТС нет"
+
+msgid "ATS xatosi: %(e)s"
+msgstr "Ошибка АТС: %(e)s"
+
+msgid "ATS: javob / jami"
+msgstr "АТС: отвечено / всего"
+
 msgid "Administrator"
 msgstr "Администратор"
+
+msgid "Asterisk'dagi operator ichki raqami, masalan 101"
+msgstr "Внутренний номер оператора в Asterisk, например 101"
 
 msgid "Avval lid kartasida sotuvni rasmiylashtiring"
 msgstr "Сначала оформите продажу в карточке лида"
@@ -50,8 +62,14 @@ msgstr "Неназначенные лиды"
 msgid "Bo'sh"
 msgstr "Пусто"
 
+msgid "Boshlangan"
+msgstr "Начало"
+
 msgid "Boshqa"
 msgstr "Другое"
+
+msgid "Boshqa izohlar"
+msgstr "Прочие комментарии"
 
 msgid "Bu raqam bilan lidlar mavjud:"
 msgstr "Лиды с этим номером уже есть:"
@@ -80,6 +98,12 @@ msgstr "CSV файл"
 msgid "Chiqish"
 msgstr "Выход"
 
+msgid "Chiquvchi"
+msgstr "Исходящий"
+
+msgid "Davomiylik (s)"
+msgstr "Длительность (с)"
+
 msgid "F.I.Sh."
 msgstr "Ф.И.О."
 
@@ -107,6 +131,15 @@ msgstr "Статус"
 msgid "Hudud"
 msgstr "Регион"
 
+msgid "IP-telefoniya"
+msgstr "IP-телефония"
+
+msgid "Ichki raqam"
+msgstr "Внутренний номер"
+
+msgid "Ichki raqam (SIP)"
+msgstr "Внутренний номер (SIP)"
+
 msgid "Import"
 msgstr "Импорт"
 
@@ -128,8 +161,23 @@ msgstr "Имя или телефон"
 msgid "Izoh"
 msgstr "Комментарий"
 
+msgid "Jami qo'ng'iroqlar"
+msgstr "Всего звонков"
+
+msgid "Javob berildi"
+msgstr "Отвечен"
+
 msgid "Javob bermadi"
 msgstr "Не ответил"
+
+msgid "Javobsiz"
+msgstr "Без ответа"
+
+msgid "Jiringlamoqda"
+msgstr "Звонит"
+
+msgid "Kartani ochish"
+msgstr "Открыть карточку"
 
 msgid "Keyingi qo'ng'iroq"
 msgstr "Следующий звонок"
@@ -137,8 +185,14 @@ msgstr "Следующий звонок"
 msgid "Kirish"
 msgstr "Вход"
 
+msgid "Kiruvchi"
+msgstr "Входящий"
+
 msgid "Kiruvchi qo'ng'iroq"
 msgstr "Входящий звонок"
+
+msgid "Kiruvchi qo'ng'iroqdan avtomatik yaratildi"
+msgstr "Создан автоматически из входящего звонка"
 
 msgid "Ko'rsatish"
 msgstr "Показать"
@@ -203,6 +257,9 @@ msgstr "Мои задачи"
 msgid "Mijoz"
 msgstr "Клиент"
 
+msgid "Mijoz raqami"
+msgstr "Номер клиента"
+
 msgid "Muddati o'tgan"
 msgstr "Просрочено"
 
@@ -224,6 +281,18 @@ msgstr "Название"
 msgid "Noto'g'ri raqam"
 msgstr "Неверный номер"
 
+msgid "O'rtacha"
+msgstr "Среднее"
+
+msgid "O'rtacha suhbat"
+msgstr "Средний разговор"
+
+msgid "O'tkazib yuborilgan"
+msgstr "Пропущено"
+
+msgid "O'tkazib yuborilgan kiruvchi"
+msgstr "Пропущенные входящие"
+
 msgid "O'zbekcha"
 msgstr "Узбекский"
 
@@ -242,8 +311,17 @@ msgstr "Операторов нет"
 msgid "Orqaga"
 msgstr "Назад"
 
+msgid "Ovoz yozuvi"
+msgstr "Запись разговора"
+
+msgid "Ovoz yozuvi hali yuklanmagan"
+msgstr "Запись ещё не загружена"
+
 msgid "Parol"
 msgstr "Пароль"
+
+msgid "Profilingizda ichki raqam (SIP) ko'rsatilmagan"
+msgstr "В вашем профиле не указан внутренний номер (SIP)"
 
 msgid "Qayta qo'ng'iroq"
 msgstr "Перезвонить"
@@ -271,6 +349,9 @@ msgstr "Звонки"
 
 msgid "Qo'ng'iroqlar tarixi"
 msgstr "История звонков"
+
+msgid "Qo'ng'iroqlar va ovoz yozuvlari"
+msgstr "Звонки и записи разговоров"
 
 msgid "Qo'shimcha telefon"
 msgstr "Доп. телефон"
@@ -329,6 +410,12 @@ msgstr "Оформить продажу"
 msgid "Sozlamalar"
 msgstr "Настройки"
 
+msgid "Suhbat matni"
+msgstr "Текст разговора"
+
+msgid "Suhbat vaqti"
+msgstr "Время разговоров"
+
 msgid "Summa"
 msgstr "Сумма"
 
@@ -340,6 +427,15 @@ msgstr "Рекомендация"
 
 msgid "Telefon"
 msgstr "Телефон"
+
+msgid "Telefon qo'ng'irog'i"
+msgstr "Телефонный звонок"
+
+msgid "Telefon qo'ng'iroqlari"
+msgstr "Телефонные звонки"
+
+msgid "Telefoningiz jiringlaydi, go'shakni ko'taring"
+msgstr "Ваш телефон звонит — поднимите трубку"
 
 msgid "Telegram"
 msgstr "Telegram"
@@ -395,3 +491,9 @@ msgstr "Новые лиды"
 
 msgid "Yaratilgan"
 msgstr "Создан"
+
+msgid "Yo'nalish"
+msgstr "Направление"
+
+msgid "Yuklab olish"
+msgstr "Скачать"

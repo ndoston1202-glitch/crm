@@ -58,6 +58,40 @@
   {% block public %}{% endblock %}
 {% endif %}
 <script src="{% static 'vendor/bootstrap/bootstrap.bundle.min.js' %}"></script>
+{% if user.is_authenticated and user.sip_extension %}
+<div class="toast-container position-fixed bottom-0 end-0 p-3" id="call-toasts"></div>
+<script>
+(function () {
+  const shown = new Set(JSON.parse(sessionStorage.getItem('crmShownCalls') || '[]'));
+  const box = document.getElementById('call-toasts');
+  async function poll() {
+    try {
+      const res = await fetch("{% url 'telephony:poll' %}");
+      const data = await res.json();
+      for (const c of data.calls) {
+        if (shown.has(c.id)) continue;
+        shown.add(c.id);
+        sessionStorage.setItem('crmShownCalls', JSON.stringify([...shown].slice(-50)));
+        const el = document.createElement('div');
+        el.className = 'toast show border-success';
+        el.innerHTML = `<div class="toast-header bg-success text-white"><i class="bi bi-telephone-inbound-fill me-2"></i>
+          <strong class="me-auto">{% trans "Kiruvchi qo'ng'iroq" %}</strong><button type="button" class="btn-close btn-close-white" data-bs-dismiss="toast"></button></div>
+          <div class="toast-body"><div class="fs-5 fw-semibold"></div><div class="text-muted small"></div>
+          <a class="btn btn-sm btn-primary mt-2">{% trans "Kartani ochish" %}</a></div>`;
+        el.querySelector('.fs-5').textContent = c.lead_name || c.phone;
+        el.querySelector('.small').textContent = c.phone + (c.lead_status ? ' · ' + c.lead_status : '');
+        const a = el.querySelector('a');
+        if (c.url) { a.href = c.url; } else { a.remove(); }
+        box.appendChild(el);
+        setTimeout(() => el.remove(), 60000);
+      }
+    } catch (e) {}
+  }
+  poll();
+  setInterval(poll, 3000);
+})();
+</script>
+{% endif %}
 {% block scripts %}{% endblock %}
 </body>
 </html>

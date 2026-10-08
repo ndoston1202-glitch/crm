@@ -12,6 +12,10 @@ class User(AbstractUser):
 
     role = models.CharField(_("Rol"), max_length=20, choices=Role.choices, default=Role.OPERATOR)
     phone = models.CharField(_("Telefon"), max_length=20, blank=True)
+    sip_extension = models.CharField(
+        _("Ichki raqam (SIP)"), max_length=20, blank=True, db_index=True,
+        help_text=_("Asterisk'dagi operator ichki raqami, masalan 101"),
+    )
 
     @property
     def is_manager(self):

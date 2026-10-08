@@ -2,6 +2,8 @@ from django.conf import settings
 from django.db import models
 from django.utils.translation import gettext_lazy as _
 
+from telephony.utils import normalize_phone
+
 
 class Lead(models.Model):
     class Status(models.TextChoices):
@@ -23,6 +25,7 @@ class Lead(models.Model):
 
     full_name = models.CharField(_("F.I.Sh."), max_length=200)
     phone = models.CharField(_("Telefon"), max_length=20, db_index=True)
+    phone_norm = models.CharField(max_length=20, blank=True, db_index=True, editable=False)
     extra_phone = models.CharField(_("Qo'shimcha telefon"), max_length=20, blank=True)
     region = models.CharField(_("Hudud"), max_length=100, blank=True)
     source = models.CharField(_("Manba"), max_length=20, choices=Source.choices, default=Source.OTHER)
@@ -52,6 +55,12 @@ class Lead(models.Model):
     def __str__(self):
         return f"{self.full_name} ({self.phone})"
 
+    def save(self, *args, **kwargs):
+        self.phone_norm = normalize_phone(self.phone)
+        if kwargs.get("update_fields") is not None and "phone" in kwargs["update_fields"]:
+            kwargs["update_fields"] = {*kwargs["update_fields"], "phone_norm"}
+        super().save(*args, **kwargs)
+
 
 class Call(models.Model):
     class Result(models.TextChoices):
@@ -64,6 +73,9 @@ class Call(models.Model):
     lead = models.ForeignKey(Lead, on_delete=models.CASCADE, related_name="calls")
     operator = models.ForeignKey(
         settings.AUTH_USER_MODEL, verbose_name=_("Operator"), on_delete=models.SET_NULL, null=True, related_name="calls"
+    )
+    phone_call = models.ForeignKey(
+        "telephony.PhoneCall", on_delete=models.SET_NULL, null=True, blank=True, related_name="notes"
     )
     result = models.CharField(_("Natija"), max_length=20, choices=Result.choices)
     note = models.TextField(_("Izoh"), blank=True)

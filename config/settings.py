@@ -18,6 +18,7 @@ INSTALLED_APPS = [
     "django.contrib.staticfiles",
     "accounts",
     "crm",
+    "telephony",
 ]
 
 MIDDLEWARE = [
@@ -92,3 +93,25 @@ STATICFILES_DIRS = [BASE_DIR / "static"]
 STATIC_ROOT = BASE_DIR / "staticfiles"
 
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
+
+# --- Asterisk IP-telefoniya ---
+ASTERISK = {
+    # AMI (bir bosishda qo'ng'iroq uchun). manager.conf dagi foydalanuvchi.
+    "AMI_HOST": os.environ.get("ASTERISK_AMI_HOST", ""),
+    "AMI_PORT": int(os.environ.get("ASTERISK_AMI_PORT", "5038")),
+    "AMI_USER": os.environ.get("ASTERISK_AMI_USER", "crm"),
+    "AMI_SECRET": os.environ.get("ASTERISK_AMI_SECRET", ""),
+    "AMI_TIMEOUT": 5,
+    # Operator telefonini chaqirish kanali: PJSIP/{extension} yoki SIP/{extension}
+    "CHANNEL_TEMPLATE": os.environ.get("ASTERISK_CHANNEL_TEMPLATE", "PJSIP/{extension}"),
+    # Tashqi raqamga chiqish konteksti (extensions.conf)
+    "OUTBOUND_CONTEXT": os.environ.get("ASTERISK_OUTBOUND_CONTEXT", "crm-outbound"),
+    "ORIGINATE_TIMEOUT": 30,
+    # Asterisk dialplan CRMga hodisa yuborganda ishlatadigan maxfiy token
+    "WEBHOOK_TOKEN": os.environ.get("ASTERISK_WEBHOOK_TOKEN", ""),
+}
+
+# Ovoz yozuvlari shu papkaga yuklanadi. Ular ochiq URL orqali emas, faqat ruxsat tekshiriladigan view orqali beriladi.
+MEDIA_ROOT = Path(os.environ.get("MEDIA_ROOT", BASE_DIR / "media"))
+DATA_UPLOAD_MAX_MEMORY_SIZE = 50 * 1024 * 1024
+FILE_UPLOAD_MAX_MEMORY_SIZE = 10 * 1024 * 1024

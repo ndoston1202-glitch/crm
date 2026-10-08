@@ -9,7 +9,14 @@
   <div class="col-lg-4">
     <div class="card mb-3"><div class="card-body">
       <dl class="mb-0">
-        <dt>{% trans "Telefon" %}</dt><dd><a href="tel:{{ lead.phone }}" class="fs-5"><i class="bi bi-telephone"></i> {{ lead.phone }}</a>{% if lead.extra_phone %}<br><a href="tel:{{ lead.extra_phone }}">{{ lead.extra_phone }}</a>{% endif %}</dd>
+        <dt>{% trans "Telefon" %}</dt>
+        <dd>
+          <div class="d-flex align-items-center gap-2"><span class="fs-5">{{ lead.phone }}</span>
+            <button type="button" class="btn btn-success btn-sm js-call" data-phone="{{ lead.phone }}"><i class="bi bi-telephone-outbound"></i> {% trans "Qo'ng'iroq" %}</button></div>
+          {% if lead.extra_phone %}<div class="d-flex align-items-center gap-2 mt-1"><span>{{ lead.extra_phone }}</span>
+            <button type="button" class="btn btn-outline-success btn-sm js-call" data-phone="{{ lead.extra_phone }}"><i class="bi bi-telephone-outbound"></i></button></div>{% endif %}
+          <div class="small mt-1" id="call-msg"></div>
+        </dd>
         <dt>{% trans "Manba" %}</dt><dd>{{ lead.get_source_display }}</dd>
         <dt>{% trans "Hudud" %}</dt><dd>{{ lead.region|default:"—" }}</dd>
         <dt>{% trans "Operator" %}</dt><dd>{{ lead.operator|default:"—" }}</dd>
@@ -43,13 +50,54 @@
     </div>
     {% endif %}
 
-    <div class="card"><div class="card-header fw-semibold"><i class="bi bi-clock-history"></i> {% trans "Qo'ng'iroqlar tarixi" %}</div>
+    <div class="card mb-3"><div class="card-header fw-semibold"><i class="bi bi-soundwave"></i> {% trans "Qo'ng'iroqlar va ovoz yozuvlari" %}</div>
+      <ul class="list-group list-group-flush">
+      {% for pc in phone_calls %}
+        <li class="list-group-item">
+          <div class="d-flex flex-wrap justify-content-between gap-2">
+            <div>
+              {% if pc.direction == "in" %}<i class="bi bi-telephone-inbound text-primary"></i>{% else %}<i class="bi bi-telephone-outbound text-success"></i>{% endif %}
+              <strong>{{ pc.get_direction_display }}</strong> · {{ pc.phone }}
+              <span class="badge bg-{% if pc.status == 'answered' %}success{% elif pc.status == 'ringing' %}warning{% else %}danger{% endif %}">{{ pc.get_status_display }}</span>
+              {% if pc.duration %}<span class="text-muted"><i class="bi bi-stopwatch"></i> {{ pc.duration_display }}</span>{% endif %}
+            </div>
+            <small class="text-muted">{{ pc.started_at|date:"d.m.Y H:i" }} · {{ pc.operator|default:pc.extension|default:"—" }}</small>
+          </div>
+          {% if pc.recording %}
+            <audio controls preload="none" class="w-100 mt-2" src="{% url 'telephony:recording' pc.pk %}"></audio>
+            <a href="{% url 'telephony:recording' pc.pk %}" download class="small"><i class="bi bi-download"></i> {% trans "Yuklab olish" %}</a>
+          {% elif pc.status == "answered" %}<div class="small text-muted mt-1">{% trans "Ovoz yozuvi hali yuklanmagan" %}</div>{% endif %}
+          {% for n in pc.notes.all %}
+            <div class="mt-2 p-2 bg-light rounded small"><i class="bi bi-chat-left-text"></i> <b>{{ n.operator }}:</b> {{ n.get_result_display }}{% if n.note %} — {{ n.note|linebreaksbr }}{% endif %}</div>
+          {% endfor %}
+          {% if pc.transcript %}<details class="mt-2"><summary class="small">{% trans "Suhbat matni" %}</summary><div class="small">{{ pc.transcript|linebreaksbr }}</div></details>{% endif %}
+        </li>
+      {% empty %}<li class="list-group-item text-muted">{% trans "ATS orqali qo'ng'iroqlar yo'q" %}</li>{% endfor %}
+      </ul>
+    </div>
+
+    <div class="card"><div class="card-header fw-semibold"><i class="bi bi-clock-history"></i> {% trans "Boshqa izohlar" %}</div>
       <ul class="list-group list-group-flush">
       {% for c in calls %}
         <li class="list-group-item"><div class="d-flex justify-content-between"><strong>{{ c.get_result_display }}</strong><small class="text-muted">{{ c.created_at|date:"d.m.Y H:i" }} · {{ c.operator }}</small></div>{% if c.note %}<div>{{ c.note|linebreaksbr }}</div>{% endif %}</li>
-      {% empty %}<li class="list-group-item text-muted">{% trans "Hali qo'ng'iroq qilinmagan" %}</li>{% endfor %}
+      {% empty %}<li class="list-group-item text-muted">{% trans "Bo'sh" %}</li>{% endfor %}
       </ul>
     </div>
   </div>
 </div>
+{% endblock %}
+{% block scripts %}
+<script>
+document.querySelectorAll('.js-call').forEach(btn => btn.addEventListener('click', async () => {
+  const msg = document.getElementById('call-msg');
+  btn.disabled = true;
+  const res = await fetch("{% url 'telephony:click_to_call' lead.pk %}", {
+    method: 'POST', headers: {'X-CSRFToken': '{{ csrf_token }}'}, body: new URLSearchParams({phone: btn.dataset.phone})
+  });
+  const data = await res.json().catch(() => ({}));
+  msg.className = 'small mt-1 ' + (res.ok ? 'text-success' : 'text-danger');
+  msg.textContent = data.message || data.error || '{% trans "Xatolik" %}';
+  setTimeout(() => btn.disabled = false, 5000);
+}));
+</script>
 {% endblock %}
