@@ -202,6 +202,7 @@ RU = {
     "Yuklash": "Загрузить",
     "iPhone qo'ng'iroq yozuvlarini boshqa ilovalarga bermaydi, shuning uchun avtomatik yuklash imkonsiz. Yozuvni lid kartasidagi «Yozuvni qo'lda yuklash» orqali yuklang.":
         "iPhone не даёт другим приложениям доступ к записям звонков, поэтому автозагрузка невозможна. Загрузите запись через «Загрузить запись вручную» в карточке лида.",
+    "Til": "Язык",
     "ATS orqali qo'ng'iroqlar yo'q": "Звонков через АТС нет",
     "ATS xatosi: %(e)s": "Ошибка АТС: %(e)s",
     "ATS: javob / jami": "АТС: отвечено / всего",

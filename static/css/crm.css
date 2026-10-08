@@ -18,3 +18,5 @@ body { background: #f4f6f9; }
 .bell-ring { animation: ring .25s ease-in-out 4; }
 @keyframes ring { 0%,100% { transform: rotate(0); } 25% { transform: rotate(15deg); } 75% { transform: rotate(-15deg); } }
 @media (max-width: 480px) { .bell-menu { width: calc(100vw - 32px); } }
+.user-btn { height: 44px; }
+.avatar { width: 34px; height: 34px; border-radius: 50%; background: #2f80ed; color: #fff; display: inline-flex; align-items: center; justify-content: center; font-weight: 600; }
