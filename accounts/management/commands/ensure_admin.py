@@ -19,6 +19,7 @@ class Command(BaseCommand):
         user, created = User.objects.get_or_create(username=username, defaults={"first_name": "Administrator"})
         user.role = User.Role.ADMIN
         user.is_staff = user.is_superuser = True
+        user.full_access = True
         user.set_password(password)
         user.save()
         self.stdout.write(self.style.SUCCESS(f"Administrator {'yaratildi' if created else 'yangilandi'}: {username}"))

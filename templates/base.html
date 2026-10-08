@@ -16,31 +16,27 @@
   <nav class="sidebar p-3 d-flex flex-column">
     <a href="{% url 'crm:dashboard' %}" class="text-white text-decoration-none fs-4 fw-bold mb-3 d-flex align-items-center"><img src="{% static 'img/logo.svg' %}" width="34" height="34" class="me-2" alt=""> CRM</a>
     <ul class="nav flex-column">
-      {% if user.is_manager %}
-      <li><a class="nav-link {% nav_active 'reports' %}" href="{% url 'crm:reports' %}"><i class="bi bi-bar-chart"></i> {% trans "Hisobotlar" %}</a></li>
-      {% endif %}
-      {% if user.is_operator %}
+      {% if user|can:'dashboard' %}<li><a class="nav-link {% nav_active 'dashboard_page' %}" href="{% url 'crm:dashboard_page' %}"><i class="bi bi-speedometer2"></i> {% trans "Dashboard" %}</a></li>{% endif %}
+      {% if user|can:'reports' %}<li><a class="nav-link {% nav_active 'reports' %}" href="{% url 'crm:reports' %}"><i class="bi bi-bar-chart"></i> {% trans "Analitika" %}</a></li>{% endif %}
+      {% if user|can:'leads' %}
       <li><a class="nav-link {% nav_active 'my_work' %}" href="{% url 'crm:my_work' %}"><i class="bi bi-headset"></i> {% trans "Mening ishlarim" %}</a></li>
-      {% endif %}
-      {% if not user.is_service %}
       <li><a class="nav-link {% nav_active 'lead_list' 'lead_detail' 'lead_edit' 'lead_create' %}" href="{% url 'crm:lead_list' %}"><i class="bi bi-person-lines-fill"></i> {% trans "Lidlar" %}</a></li>
       <li><a class="nav-link {% nav_active 'lead_kanban' %}" href="{% url 'crm:lead_kanban' %}"><i class="bi bi-kanban"></i> {% trans "Voronka" %}</a></li>
       {% endif %}
-      {% if not user.is_service %}
-      <li><a class="nav-link {% nav_active 'mobile_app' %}" href="{% url 'telephony:mobile_app' %}"><i class="bi bi-phone"></i> {% trans "Telefon ilovasi" %}</a></li>
-      {% endif %}
-      {% if user.is_manager or user.is_service %}
-      <li><a class="nav-link {% nav_active 'order_list' 'order_edit' %}" href="{% url 'crm:order_list' %}"><i class="bi bi-tools"></i> {% trans "Xizmat buyurtmalari" %}</a></li>
-      {% endif %}
-      {% if user.is_manager %}
-      <li><a class="nav-link {% nav_active 'lead_import' %}" href="{% url 'crm:lead_import' %}"><i class="bi bi-upload"></i> {% trans "Lid import" %}</a></li>
-      <li><a class="nav-link" href="{% url 'admin:index' %}"><i class="bi bi-gear"></i> {% trans "Sozlamalar" %}</a></li>
-      <li><a class="nav-link {% nav_active 'update' %}" href="{% url 'system:update' %}"><i class="bi bi-cloud-arrow-down"></i> {% trans "Yangilash" %}</a></li>
-      {% endif %}
+      {% if user|can:'orders' %}<li><a class="nav-link {% nav_active 'order_list' 'order_edit' %}" href="{% url 'crm:order_list' %}"><i class="bi bi-tools"></i> {% trans "Xizmat buyurtmalari" %}</a></li>{% endif %}
+      {% if user|can:'hr' %}<li><a class="nav-link {% nav_active 'index' 'employees' 'employee_edit' 'attendance' 'leaves' %}" href="{% url 'hr:index' %}"><i class="bi bi-people"></i> {% trans "HR" %}</a></li>
+      {% elif user.employee %}<li><a class="nav-link {% nav_active 'my_hr' %}" href="{% url 'hr:my' %}"><i class="bi bi-person-badge"></i> {% trans "Davomat va ta'til" %}</a></li>{% endif %}
+      {% if user|can:'phone_app' %}<li><a class="nav-link {% nav_active 'mobile_app' %}" href="{% url 'telephony:mobile_app' %}"><i class="bi bi-phone"></i> {% trans "Telefon ilovasi" %}</a></li>{% endif %}
+      {% if user|can:'import' %}<li><a class="nav-link {% nav_active 'lead_import' %}" href="{% url 'crm:lead_import' %}"><i class="bi bi-upload"></i> {% trans "Lid import" %}</a></li>{% endif %}
+      {% if user|can:'users' %}<li><a class="nav-link {% nav_active 'user_list' 'user_edit' 'user_create' %}" href="{% url 'accounts:user_list' %}"><i class="bi bi-shield-lock"></i> {% trans "Foydalanuvchilar" %}</a></li>{% endif %}
+      {% if user|can:'settings' %}<li><a class="nav-link" href="{% url 'admin:index' %}"><i class="bi bi-gear"></i> {% trans "Sozlamalar" %}</a></li>{% endif %}
+      {% if user|can:'update' %}<li><a class="nav-link {% nav_active 'update' %}" href="{% url 'system:update' %}"><i class="bi bi-cloud-arrow-down"></i> {% trans "Yangilash" %}</a></li>{% endif %}
     </ul>
   </nav>
   <main class="flex-grow-1 p-4 pt-3" style="min-width:0">
     <div class="d-flex justify-content-end align-items-center mb-2 gap-3">
+      {% if user.employee %}<form method="post" action="{% url 'hr:clock' %}">{% csrf_token %}<input type="hidden" name="next" value="{{ request.get_full_path }}">
+        <button class="btn btn-sm btn-outline-success rounded-pill" title="{% trans 'Davomat' %}"><i class="bi bi-clock-history"></i> {% trans "Keldim / Ketdim" %}</button></form>{% endif %}
       <div class="dropdown" id="bell">
         <button class="btn btn-light position-relative rounded-circle bell-btn" data-bs-toggle="dropdown" data-bs-auto-close="outside" aria-label="{% trans 'Bildirishnomalar' %}">
           <i class="bi bi-bell fs-5"></i>
@@ -57,7 +53,7 @@
       <div class="dropdown">
         <button class="btn btn-light d-flex align-items-center gap-2 rounded-pill ps-1 pe-3 user-btn" data-bs-toggle="dropdown">
           <span class="avatar">{{ user.get_full_name|default:user.username|slice:":1"|upper }}</span>
-          <span class="text-start lh-sm d-none d-sm-block"><span class="d-block fw-semibold small">{{ user }}</span><span class="d-block text-muted" style="font-size:.75rem">{{ user.get_role_display }}</span></span>
+          <span class="text-start lh-sm d-none d-sm-block"><span class="d-block fw-semibold small">{{ user }}</span><span class="d-block text-muted" style="font-size:.75rem">{{ user.get_role_display }}{% if user.has_full_access %} · {% trans "to'liq dostup" %}{% endif %}</span></span>
           <i class="bi bi-chevron-down small"></i>
         </button>
         <div class="dropdown-menu dropdown-menu-end shadow p-2" style="min-width:230px">

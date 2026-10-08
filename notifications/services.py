@@ -8,6 +8,7 @@ ICONS = {
     "order": "bi-tools",
     "missed": "bi-telephone-x",
     "update": "bi-cloud-arrow-down",
+    "leave": "bi-calendar2-check",
 }
 
 
@@ -29,7 +30,8 @@ def notify(users, kind, title, text="", url="", key=""):
 
 
 def managers():
+    """Barcha ma'lumotlarni ko'radigan rahbarlar (to'liq dostup yoki "hammasi" doirasi)."""
+    from django.db.models import Q
+
     User = get_user_model()
-    return User.objects.filter(is_active=True).filter(role__in=[User.Role.ADMIN, User.Role.MANAGER]) | User.objects.filter(
-        is_active=True, is_superuser=True
-    )
+    return User.objects.filter(is_active=True).filter(Q(is_superuser=True) | Q(full_access=True) | Q(data_scope="all"))

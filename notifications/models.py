@@ -10,6 +10,7 @@ class Notification(models.Model):
         ORDER = "order", _("Xizmat buyurtmasi")
         MISSED = "missed", _("O'tkazib yuborilgan qo'ng'iroq")
         UPDATE = "update", _("Yangilanish")
+        LEAVE = "leave", _("Ta'til")
 
     user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name="notifications")
     kind = models.CharField(max_length=20, choices=Kind.choices)

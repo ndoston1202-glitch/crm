@@ -3,12 +3,12 @@ from django.http import JsonResponse
 from django.shortcuts import redirect, render
 from django.views.decorators.http import require_POST
 
-from crm.views import manager_required
+from crm.views import module_required
 
 from . import updates
 
 
-@manager_required
+@module_required("update")
 def update(request):
     context = {"version": updates.current_version(), "git": updates.git_available(), "can_restart": updates.can_restart()}
     if request.GET.get("check"):
@@ -19,7 +19,7 @@ def update(request):
     return render(request, "system/update.html", context)
 
 
-@manager_required
+@module_required("update")
 @require_POST
 def apply(request):
     try:

@@ -23,3 +23,9 @@ def status_color(value):
 def nav_active(context, *names):
     match = context["request"].resolver_match
     return "active" if match and match.url_name in names else ""
+
+
+@register.filter
+def can(user, module):
+    """{% if user|can:'reports' %} — foydalanuvchining modulga ruxsati."""
+    return bool(getattr(user, "can", None)) and user.can(module)

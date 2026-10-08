@@ -14,7 +14,7 @@ from .services import ICONS, notify
 
 def _due_callbacks(user):
     """Operatorning qo'ng'iroq vaqti kelgan lidlari uchun bildirishnoma yaratadi (har bir vaqt uchun bir marta)."""
-    if not user.is_operator:
+    if not user.can("leads"):
         return
     leads = Lead.objects.filter(operator=user, next_call_at__lte=timezone.now()).exclude(
         status__in=[Lead.Status.WON, Lead.Status.LOST]
@@ -35,7 +35,7 @@ def _due_callbacks(user):
 def poll(request):
     user = request.user
     _due_callbacks(user)
-    if user.is_manager:
+    if user.can("update"):
         from system.updates import maybe_notify_update
 
         maybe_notify_update()

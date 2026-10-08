@@ -30,6 +30,7 @@ INSTALLED_APPS = [
     "telephony",
     "notifications",
     "system",
+    "hr",
 ]
 
 MIDDLEWARE = [

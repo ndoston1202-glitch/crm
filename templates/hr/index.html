@@ -1,0 +1,40 @@
+{% extends "base.html" %}{% load i18n %}
+{% block title %}{% trans "HR" %}{% endblock %}
+{% block content %}
+{% include "hr/_nav.html" %}
+<div class="row g-3 mb-3">
+  <div class="col-6 col-lg"><div class="card stat-card"><div class="card-body"><div class="text-muted small">{% trans "Xodimlar" %}</div><div class="value">{{ total }}</div></div></div></div>
+  <div class="col-6 col-lg"><div class="card stat-card"><div class="card-body"><div class="text-muted small">{% trans "Bugun kelgan" %}</div><div class="value text-success">{{ present }}</div></div></div></div>
+  <div class="col-6 col-lg"><div class="card stat-card"><div class="card-body"><div class="text-muted small">{% trans "Kechikkan" %}</div><div class="value text-warning">{{ late }}</div></div></div></div>
+  <div class="col-6 col-lg"><div class="card stat-card"><div class="card-body"><div class="text-muted small">{% trans "Ta'tilda" %}</div><div class="value">{{ leave }}</div></div></div></div>
+  <div class="col-6 col-lg"><a href="{% url 'hr:leaves' %}" class="text-decoration-none"><div class="card stat-card"><div class="card-body"><div class="text-muted small">{% trans "Kutilayotgan so'rovlar" %}</div><div class="value text-danger">{{ pending }}</div></div></div></a></div>
+</div>
+<div class="row g-3">
+  <div class="col-xl-8"><div class="card"><div class="card-header fw-semibold">{% trans "Bugungi davomat" %}</div>
+    <div class="table-responsive"><table class="table align-middle mb-0">
+      <thead><tr><th>{% trans "Xodim" %}</th><th>{% trans "Bo'lim" %}</th><th>{% trans "Keldi" %}</th><th>{% trans "Ketdi" %}</th><th>{% trans "Holat" %}</th></tr></thead>
+      <tbody>{% for r in rows %}<tr>
+        <td><a href="{% url 'hr:employee_edit' r.e.pk %}">{{ r.e.full_name }}</a><div class="small text-muted">{{ r.e.position }}</div></td>
+        <td>{{ r.e.department|default:"—" }}</td>
+        <td>{{ r.a.check_in|time:"H:i"|default:"—" }}</td><td>{{ r.a.check_out|time:"H:i"|default:"—" }}</td>
+        <td>{% if r.state == "present" %}<span class="badge bg-success">{% trans "Keldi" %}</span>
+            {% elif r.state == "late" %}<span class="badge bg-warning text-dark">{% trans "Kechikdi" %} {{ r.a.late_minutes }} {% trans "daq." %}</span>
+            {% elif r.state == "leave" %}<span class="badge bg-info text-dark">{% trans "Ta'tilda" %}</span>
+            {% else %}<span class="badge bg-secondary">{% trans "Kelmagan" %}</span>{% endif %}</td>
+      </tr>{% empty %}<tr><td colspan="5" class="text-center text-muted py-4">{% trans "Xodimlar qo'shilmagan" %} — <a href="{% url 'hr:employee_create' %}">{% trans "qo'shish" %}</a></td></tr>{% endfor %}</tbody>
+    </table></div></div></div>
+  <div class="col-xl-4">
+    <div class="card mb-3"><div class="card-header fw-semibold">{% trans "Davomatni qo'lda belgilash" %}</div><div class="card-body">
+      <form method="post" action="{% url 'hr:attendance_fix' %}" class="row g-2">{% csrf_token %}
+        <div class="col-12">{{ fix_form.employee }}</div>
+        <div class="col-12">{{ fix_form.date }}</div>
+        <div class="col-6"><label class="small text-muted">{% trans "Keldi" %}</label>{{ fix_form.check_in }}</div>
+        <div class="col-6"><label class="small text-muted">{% trans "Ketdi" %}</label>{{ fix_form.check_out }}</div>
+        <div class="col-12"><button class="btn btn-sm btn-primary w-100">{% trans "Saqlash" %}</button></div>
+      </form></div></div>
+    <div class="card"><div class="card-header fw-semibold"><i class="bi bi-gift"></i> {% trans "Shu oy tug'ilgan kunlar" %}</div>
+      <ul class="list-group list-group-flush">{% for e in birthdays %}<li class="list-group-item d-flex justify-content-between"><span>{{ e.full_name }}</span><span class="text-muted">{{ e.birth_date|date:"d.m" }}</span></li>
+      {% empty %}<li class="list-group-item text-muted">—</li>{% endfor %}</ul></div>
+  </div>
+</div>
+{% endblock %}

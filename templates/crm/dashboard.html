@@ -1,0 +1,77 @@
+{% extends "base.html" %}{% load i18n static crm_tags %}
+{% block title %}{% trans "Dashboard" %}{% endblock %}
+{% block content %}
+<div class="d-flex flex-wrap justify-content-between align-items-center mb-3 gap-2">
+  <h3 class="mb-0">{% trans "Dashboard" %}</h3>
+  <span class="text-muted small">{% if user.is_manager %}{% trans "Butun kompaniya" %}{% else %}{% trans "Faqat sizning ko'rsatkichlaringiz" %}{% endif %} · {% now "d.m.Y" %}</span>
+</div>
+
+<div class="row g-3 mb-3">
+  {% with t=d.today y=d.yesterday %}
+  <div class="col-6 col-xl-3"><div class="card stat-card h-100"><div class="card-body">
+    <div class="text-muted small">{% trans "Bugun yangi lidlar" %}</div><div class="value">{{ t.leads }}</div>
+    <div class="small text-muted">{% trans "kecha" %}: {{ y.leads }}</div></div></div></div>
+  <div class="col-6 col-xl-3"><div class="card stat-card h-100"><div class="card-body">
+    <div class="text-muted small">{% trans "Bugun qo'ng'iroqlar" %}</div><div class="value">{{ t.calls }}</div>
+    <div class="small text-muted">{% trans "kecha" %}: {{ y.calls }}</div></div></div></div>
+  <div class="col-6 col-xl-3"><div class="card stat-card h-100"><div class="card-body">
+    <div class="text-muted small">{% trans "Bugun sotuvlar" %}</div><div class="value">{{ t.sales }}</div>
+    <div class="small text-muted">{% trans "kecha" %}: {{ y.sales }}</div></div></div></div>
+  <div class="col-6 col-xl-3"><div class="card stat-card h-100"><div class="card-body">
+    <div class="text-muted small">{% trans "Bugun tushum" %}</div><div class="value">{{ t.revenue|floatformat:"0g" }}</div>
+    <div class="small text-muted">{% trans "kecha" %}: {{ y.revenue|floatformat:"0g" }}</div></div></div></div>
+  {% endwith %}
+</div>
+
+<div class="row g-3 mb-3">
+  <div class="col-xl-8"><div class="card h-100"><div class="card-header fw-semibold d-flex justify-content-between">
+      <span>{% trans "Lidlar va sotuvlar — oxirgi 30 kun" %}</span>
+      <span class="small text-muted">{% trans "Shu oy" %}: {{ d.month.leads }} {% trans "lid" %} · {{ d.month.sales }} {% trans "sotuv" %} · {{ d.month.conversion }}%</span></div>
+    <div class="card-body"><div style="height:280px"><canvas id="trend" role="img"></canvas></div></div></div></div>
+  <div class="col-xl-4"><div class="card h-100"><div class="card-header fw-semibold">{% trans "Diqqat talab qiladi" %}</div>
+    <ul class="list-group list-group-flush">
+      {% if user|can:'leads' %}<a href="{% url 'crm:my_work' %}" class="list-group-item list-group-item-action d-flex justify-content-between"><span><i class="bi bi-alarm text-danger"></i> {% trans "Muddati o'tgan qo'ng'iroqlar" %}</span><b>{{ d.overdue }}</b></a>{% endif %}
+      {% if d.unassigned is not None %}<a href="{% url 'crm:lead_list' %}?operator=none" class="list-group-item list-group-item-action d-flex justify-content-between"><span><i class="bi bi-person-x text-warning"></i> {% trans "Biriktirilmagan lidlar" %}</span><b>{{ d.unassigned }}</b></a>{% endif %}
+      <li class="list-group-item d-flex justify-content-between"><span><i class="bi bi-telephone-x text-danger"></i> {% trans "Bugun o'tkazib yuborilgan qo'ng'iroqlar" %}</span><b>{{ d.missed_today }}</b></li>
+      {% if user|can:'orders' %}<a href="{% url 'crm:order_list' %}" class="list-group-item list-group-item-action d-flex justify-content-between"><span><i class="bi bi-tools text-primary"></i> {% trans "Ochiq xizmat buyurtmalari" %}</span><b>{{ d.orders_open }}</b></a>{% endif %}
+      {% if hr_pending is not None %}<a href="{% url 'hr:leaves' %}" class="list-group-item list-group-item-action d-flex justify-content-between"><span><i class="bi bi-calendar2-x text-warning"></i> {% trans "Ko'rib chiqilmagan ta'til so'rovlari" %}</span><b>{{ hr_pending }}</b></a>{% endif %}
+    </ul>
+    <div class="card-body border-top">
+      <div class="text-muted small mb-1">{% trans "Shu oy tushum" %}</div>
+      <div class="fs-3 fw-semibold">{{ d.month.revenue|floatformat:"0g" }}</div>
+    </div>
+  </div></div>
+</div>
+
+<div class="row g-3">
+  <div class="col-lg-6 col-xl-4"><div class="card h-100"><div class="card-header fw-semibold">{% trans "Kunlik tushum — 30 kun" %}</div>
+    <div class="card-body"><div style="height:240px"><canvas id="revenue"></canvas></div></div></div></div>
+  <div class="col-lg-6 col-xl-4"><div class="card h-100"><div class="card-header fw-semibold">{% trans "Ochiq lidlar holati" %}</div>
+    <div class="card-body"><div style="height:240px"><canvas id="funnel"></canvas></div></div></div></div>
+  <div class="col-lg-6 col-xl-4"><div class="card h-100"><div class="card-header fw-semibold">{% trans "Lid manbalari — shu oy" %}</div>
+    <div class="card-body">{% if d.sources %}<div style="height:240px"><canvas id="sources"></canvas></div>{% else %}<div class="text-muted">—</div>{% endif %}</div></div></div>
+  {% if d.top is not None %}
+  <div class="col-lg-6 col-xl-12"><div class="card"><div class="card-header fw-semibold">{% trans "Eng yaxshi operatorlar — shu oy" %}</div>
+    <table class="table mb-0 align-middle"><thead><tr><th>#</th><th>{% trans "Operator" %}</th><th>{% trans "Sotuvlar" %}</th><th>{% trans "Tushum" %}</th></tr></thead><tbody>
+    {% for r in d.top %}<tr><td>{{ forloop.counter }}</td><td>{{ r.name }}</td><td>{{ r.n }}</td><td>{{ r.s|floatformat:"0g" }}</td></tr>
+    {% empty %}<tr><td colspan="4" class="text-muted text-center">{% trans "Bu oy hali sotuv yo'q" %}</td></tr>{% endfor %}
+    </tbody></table></div></div>
+  {% endif %}
+</div>
+{{ chart|json_script:"chart-data" }}
+{% endblock %}
+{% block scripts %}
+<script src="{% static 'vendor/chartjs/chart.umd.js' %}"></script>
+<script src="{% static 'js/charts.js' %}"></script>
+<script>
+const D = JSON.parse(document.getElementById('chart-data').textContent);
+crmCharts.line(document.getElementById('trend'), D.series.labels, [
+  {label: "{% trans 'Lidlar' %}", data: D.series.leads},
+  {label: "{% trans 'Sotuvlar' %}", data: D.series.sales},
+]);
+crmCharts.bar(document.getElementById('revenue'), D.series.labels, D.series.revenue, {label: "{% trans 'Tushum' %}", money: true});
+crmCharts.bar(document.getElementById('funnel'), D.funnel.map(f => f.label), D.funnel.map(f => f.n), {horizontal: true, label: "{% trans 'Lidlar' %}"});
+const src = document.getElementById('sources');
+if (src) crmCharts.bar(src, D.sources.map(s => s.label), D.sources.map(s => s.n), {horizontal: true, label: "{% trans 'Lidlar' %}"});
+</script>
+{% endblock %}

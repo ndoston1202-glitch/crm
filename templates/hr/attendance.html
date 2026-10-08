@@ -1,0 +1,19 @@
+{% extends "base.html" %}{% load i18n %}
+{% block title %}{% trans "Davomat" %}{% endblock %}
+{% block content %}
+{% include "hr/_nav.html" %}
+<div class="d-flex align-items-center gap-2 mb-3">
+  <a href="?month={{ prev }}" class="btn btn-outline-secondary btn-sm"><i class="bi bi-chevron-left"></i></a>
+  <h5 class="mb-0">{{ month|date:"F Y" }}</h5>
+  <a href="?month={{ next }}" class="btn btn-outline-secondary btn-sm"><i class="bi bi-chevron-right"></i></a>
+  <span class="text-muted small ms-2">{% trans "Ish kunlari (yakshanbasiz)" %}: {{ workdays }}</span>
+</div>
+<div class="card"><div class="table-responsive"><table class="table align-middle mb-0">
+  <thead><tr><th>{% trans "Xodim" %}</th><th>{% trans "Bo'lim" %}</th><th>{% trans "Kelgan kunlar" %}</th><th>{% trans "Kechikishlar" %}</th><th>{% trans "Ta'til kunlari" %}</th><th>{% trans "Kelmagan" %}</th><th>{% trans "Ishlagan soat" %}</th></tr></thead>
+  <tbody>{% for r in rows %}<tr>
+    <td><a href="{% url 'hr:employee_edit' r.e.pk %}">{{ r.e.full_name }}</a></td><td>{{ r.e.department|default:"—" }}</td>
+    <td>{{ r.present }}</td><td class="{% if r.late %}text-warning fw-semibold{% endif %}">{{ r.late }}</td>
+    <td>{{ r.leave }}</td><td class="{% if r.absent %}text-danger fw-semibold{% endif %}">{{ r.absent }}</td><td>{{ r.hours }}</td>
+  </tr>{% empty %}<tr><td colspan="7" class="text-center text-muted py-4">—</td></tr>{% endfor %}</tbody>
+</table></div></div>
+{% endblock %}

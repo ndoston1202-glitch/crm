@@ -1,0 +1,23 @@
+{% extends "base.html" %}{% load i18n %}
+{% block title %}{% trans "Ta'tillar" %}{% endblock %}
+{% block content %}
+{% include "hr/_nav.html" %}
+<div class="mb-3 d-flex flex-wrap gap-2">
+  {% for v, l in statuses %}<a href="?status={{ v }}" class="btn btn-sm {% if status == v %}btn-dark{% else %}btn-outline-dark{% endif %}">{{ l }}</a>{% endfor %}
+  <a href="?status=" class="btn btn-sm {% if not status %}btn-dark{% else %}btn-outline-dark{% endif %}">{% trans "Barchasi" %}</a>
+</div>
+<div class="card"><div class="table-responsive"><table class="table align-middle mb-0">
+  <thead><tr><th>{% trans "Xodim" %}</th><th>{% trans "Turi" %}</th><th>{% trans "Sanalar" %}</th><th>{% trans "Sabab" %}</th><th>{% trans "Holat" %}</th><th></th></tr></thead>
+  <tbody>{% for l in leaves %}<tr>
+    <td>{{ l.employee.full_name }}</td><td>{{ l.get_kind_display }}</td>
+    <td class="text-nowrap">{{ l.start_date|date:"d.m.Y" }} – {{ l.end_date|date:"d.m.Y" }}<div class="small text-muted">{{ l.days }} {% trans "kun" %}</div></td>
+    <td class="small">{{ l.reason|default:"—" }}</td>
+    <td><span class="badge bg-{% if l.status == 'approved' %}success{% elif l.status == 'rejected' %}danger{% else %}warning text-dark{% endif %}">{{ l.get_status_display }}</span>
+      {% if l.decided_by %}<div class="small text-muted">{{ l.decided_by }}</div>{% endif %}</td>
+    <td class="text-nowrap">{% if l.status == "pending" %}
+      <form method="post" action="{% url 'hr:leave_decide' l.pk %}" class="d-inline">{% csrf_token %}<button name="decision" value="approve" class="btn btn-sm btn-success"><i class="bi bi-check-lg"></i> {% trans "Tasdiqlash" %}</button></form>
+      <form method="post" action="{% url 'hr:leave_decide' l.pk %}" class="d-inline">{% csrf_token %}<button name="decision" value="reject" class="btn btn-sm btn-outline-danger"><i class="bi bi-x-lg"></i></button></form>
+    {% endif %}</td>
+  </tr>{% empty %}<tr><td colspan="6" class="text-center text-muted py-4">{% trans "So'rovlar yo'q" %}</td></tr>{% endfor %}</tbody>
+</table></div></div>
+{% endblock %}
