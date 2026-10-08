@@ -115,7 +115,8 @@ Step "Ish stolida CRM yorlig'i"
 $desktop = [Environment]::GetFolderPath("Desktop")
 $shell = New-Object -ComObject WScript.Shell
 $lnk = $shell.CreateShortcut((Join-Path $desktop "CRM.lnk"))
-$lnk.TargetPath = Join-Path $Root "Ishga_tushirish.bat"
+$lnk.TargetPath = Join-Path $env:WINDIR "System32\wscript.exe"
+$lnk.Arguments = '"' + (Join-Path $Root "tools\windows\crm.vbs") + '"'
 $lnk.WorkingDirectory = "$Root"
 $lnk.IconLocation = (Join-Path $Root "static\img\crm.ico") + ",0"
 $lnk.WindowStyle = 7

@@ -8,9 +8,11 @@ O'zbek va rus tillarida. Asterisk IP-telefoniyasi bilan ishlaydi.
 1. Papkani kompyuterga yuklab oling (GitHub → **Code → Download ZIP** va arxivni oching, yoki `git clone`).
 2. **`Ornatish.bat`** ni ikki marta bosing. U o'zi Python, Git va FFmpeg ni o'rnatadi, bazani tayyorlaydi,
    administrator parolini so'raydi va ish stolida **CRM** belgisini (logo bilan) yaratadi.
-3. Ish stolidagi **CRM** belgisini bosing — dastur ishga tushadi va brauzerda ochiladi.
+3. Ish stolidagi **CRM** belgisini bosing — CRM **alohida ilova oynasida** ochiladi (brauzer emas, manzil satri yo'q).
+   Server qora oynasiz, fonda ishlaydi. To'xtatish kerak bo'lsa — `Toxtatish.bat`.
 
-Operatorlar o'z kompyuterlaridan brauzerda `http://<server-kompyuter-IP>:8000` manzilini ochadi.
+**Operatorlar kompyuterlari:** papkani nusxalab, **`Klient_ornatish.bat`** ni ishga tushiring va server manzilini
+kiriting (masalan `192.168.1.10`). Ish stolida CRM belgisi paydo bo'ladi — Python o'rnatish shart emas.
 
 ## Yangilash
 
@@ -37,7 +39,8 @@ Foydalanuvchilar va xizmatlar **Sozlamalar** bo'limida qo'shiladi.
 
 | Papka | Ichida |
 |---|---|
-| `Ornatish.bat`, `Ishga_tushirish.bat` | O'rnatish va ishga tushirish |
+| `Ornatish.bat`, `Ishga_tushirish.bat`, `Toxtatish.bat` | Server kompyuterida o'rnatish, ishga tushirish, to'xtatish |
+| `Klient_ornatish.bat` | Operator kompyuterlarida CRM belgisini yaratish |
 | `crm/` | Lidlar, voronka, sotuv, hisobotlar |
 | `telephony/` | Asterisk integratsiyasi |
 | `notifications/` | Bildirishnomalar |
